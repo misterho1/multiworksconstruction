@@ -1,0 +1,10 @@
+# Local-only working files (never committed)
+.local/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store
+Thumbs.db

@@ -29,7 +29,20 @@ with open(MANIFEST) as f:
     IMG = json.load(f)
 
 def img(name):
+    """Return the manifest URL for a named image (relative or absolute)."""
     return IMG.get(name, "")
+
+def absolute_url(path):
+    """Promote a possibly-relative path to a fully-qualified URL.
+
+    Open Graph and JSON-LD require absolute image URLs for social previews
+    and structured data to validate. In-page CSS/HTML can keep relative paths.
+    """
+    if not path:
+        return ""
+    if path.startswith(("http://", "https://")):
+        return path
+    return f"{DOMAIN}{path}"
 
 # ----------------------------------------------------------------
 # Service catalog (merged from competitor scans)
@@ -326,7 +339,7 @@ def esc(s):
     return html.escape(s, quote=True)
 
 def common_head(title, description, canonical_path, og_image_name, extra_jsonld=None):
-    og_image = img(og_image_name) if og_image_name else img("hero-01")
+    og_image = absolute_url(img(og_image_name) if og_image_name else img("hero-01"))
     canonical = f"{DOMAIN}{canonical_path}"
     local_business_jsonld = {
         "@context": "https://schema.org",
@@ -392,7 +405,6 @@ def common_head(title, description, canonical_path, og_image_name, extra_jsonld=
 <meta name="geo.placename" content="Salt Lake City, Utah">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://d8j0ntlcm91z4.cloudfront.net" crossorigin>
 <link rel="stylesheet" href="/assets/styles.css">
 {scripts}
 </head>
