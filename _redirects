@@ -1,0 +1,8 @@
+# Cloudflare Pages _redirects — multiworksconstruction.com
+# Force apex (www -> non-www) for consistent canonical URLs.
+
+https://www.multiworksconstruction.com/* https://multiworksconstruction.com/:splat 301
+
+# Legacy slugs from prior mirror (graceful 404 prevention)
+/home.html        /                            301
+/index            /                            301
