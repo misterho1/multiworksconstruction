@@ -3,14 +3,17 @@
    Bone background, charcoal text, terracotta-bronze accent
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap');
+/* Fonts loaded via <link rel="preload"> in the page head (build.py).
+   Marcellus = Trajan-influenced caps-friendly serif (carved stone, museum caption).
+   Sora = 2022 release distinctive humanist sans (Korean foundry).
+   Both deliberately off the impeccable reflex-reject font list. */
 
 :root {
   --bone: #F5F1EA;
   --paper: #FFFFFF;
   --ink: #1A1A1A;
   --ink-soft: #2A2A28;
-  --mute: #6B6B66;
+  --mute: #5A5A56;
   --mute-2: #9A9690;
   --rule: #D8D2C7;
   --rule-soft: #E8E3D9;
@@ -18,8 +21,8 @@
   --accent-hover: #6F4530;
   --forest: #2E3A2C;
 
-  --serif: 'Cormorant Garamond', Georgia, serif;
-  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --serif: 'Marcellus', 'Trajan Pro', Georgia, serif;
+  --sans: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   --maxw: 1320px;
   --gutter: clamp(1.25rem, 4vw, 3rem);
@@ -51,23 +54,25 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 }
 .eyebrow--mute { color: var(--mute); }
 
+/* Marcellus is single-weight (400) — hierarchy comes from scale + letter-spacing, not weight contrast.
+   The previous italic-accent-word tic on em was removed: it was the single most diagnostic AI tell per the critique. */
 h1, .h1 {
   font-family: var(--serif);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(2.5rem, 6vw, 5.5rem);
   line-height: 1.05;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.005em;
 }
-h1 em, .h1 em { font-style: italic; font-weight: 400; color: var(--accent); }
+h1 em, .h1 em { font-style: normal; font-weight: 400; color: inherit; }
 
 h2, .h2 {
   font-family: var(--serif);
-  font-weight: 300;
+  font-weight: 400;
   font-size: clamp(2rem, 4.5vw, 3.5rem);
   line-height: 1.1;
-  letter-spacing: -0.005em;
+  letter-spacing: 0;
 }
-h2 em, .h2 em { font-style: italic; color: var(--accent); }
+h2 em, .h2 em { font-style: normal; color: inherit; }
 
 h3, .h3 {
   font-family: var(--serif);
@@ -231,11 +236,15 @@ p.lead { font-size: 1.15rem; line-height: 1.7; color: var(--ink-soft); }
   overflow: hidden;
 }
 .hero__bg { position: absolute; inset: 0; z-index: 1; }
+/* Hero slides switched to <img> elements for alt text + native lazy-loading.
+   object-fit replaces background-size:cover; transition stays opacity-only (compositor-friendly). */
 .hero__slide {
   position: absolute; inset: 0;
-  background-size: cover; background-position: center;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
   opacity: 0;
-  transition: opacity 0.9s ease-in-out;
+  transition: opacity 1.2s ease-in-out;
   will-change: opacity;
 }
 .hero__slide.is-active { opacity: 1; }
@@ -276,7 +285,8 @@ p.lead { font-size: 1.15rem; line-height: 1.7; color: var(--ink-soft); }
   color: var(--bone);
   overflow: hidden;
 }
-.page-hero__bg { position: absolute; inset: 0; z-index: 1; background-size: cover; background-position: center; }
+.page-hero__bg { position: absolute; inset: 0; z-index: 1; }
+.page-hero__bg img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .page-hero__bg::after {
   content: ''; position: absolute; inset: 0;
   background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.35) 60%, rgba(0,0,0,0.6));
@@ -312,7 +322,7 @@ p.lead { font-size: 1.15rem; line-height: 1.7; color: var(--ink-soft); }
 }
 .split--narrow { gap: 4rem; }
 @media (max-width: 800px) { .split { grid-template-columns: 1fr; gap: 2.5rem; } }
-.split__image { aspect-ratio: 4/5; background-size: cover; background-position: center; }
+.split__image { aspect-ratio: 4/5; overflow: hidden; }
 .split__image--landscape { aspect-ratio: 4/3; }
 
 /* service grid */
@@ -363,7 +373,8 @@ p.lead { font-size: 1.15rem; line-height: 1.7; color: var(--ink-soft); }
   gap: 1rem;
   margin: 4rem 0;
 }
-.triptych__item { background-size: cover; background-position: center; aspect-ratio: 4/3; }
+.triptych__item { aspect-ratio: 4/3; overflow: hidden; }
+.triptych__item img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
 .triptych__item:nth-child(1) { grid-row: span 2; aspect-ratio: 3/4; }
 @media (max-width: 700px) {
   .triptych { grid-template-columns: 1fr 1fr; }
@@ -390,7 +401,8 @@ p.lead { font-size: 1.15rem; line-height: 1.7; color: var(--ink-soft); }
   line-height: 1;
   color: var(--ink);
 }
-.stats__num sup { font-size: 0.5em; color: var(--accent); top: -1.4em; }
+.stats__num sup, .stats__num sub { font-size: 0.5em; color: var(--accent); top: -1.4em; font-weight: 400; }
+.split__image img { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
 .stats__label {
   font-size: 0.72rem;
   letter-spacing: 0.16em;
@@ -488,7 +500,7 @@ p.lead { font-size: 1.15rem; line-height: 1.7; color: var(--ink-soft); }
   padding: clamp(4rem, 8vw, 7rem) var(--gutter);
 }
 .cta-band h2 { margin-bottom: 1.5rem; max-width: 22ch; margin-inline: auto; }
-.cta-band h2 em { color: var(--accent); }
+.cta-band h2 em { color: inherit; font-style: normal; }
 .cta-band p { color: var(--bone); opacity: 0.85; margin: 0 auto 2.5rem; }
 .cta-band .phone {
   display: inline-block;
@@ -518,7 +530,7 @@ p.lead { font-size: 1.15rem; line-height: 1.7; color: var(--ink-soft); }
 .footer__brand .brand__mark { color: var(--bone); }
 .footer__brand .brand__sub { color: var(--mute-2); }
 .footer__about { color: var(--bone); opacity: 0.7; margin-top: 1.5rem; max-width: 38ch; font-size: 0.95rem; }
-.footer h4 {
+.footer__heading {
   font-family: var(--sans);
   font-size: 0.72rem; font-weight: 500;
   letter-spacing: 0.2em; text-transform: uppercase;
@@ -616,6 +628,9 @@ p.lead { font-size: 1.15rem; line-height: 1.7; color: var(--ink-soft); }
 }
 .tap-call:hover { background: var(--accent); }
 @media (max-width: 700px) { .tap-call { display: block; } body { padding-bottom: 4.5rem; } }
+/* Hide sticky tap-call on the contact page so it doesn't cover the form submit button. */
+body.page-contact .tap-call { display: none !important; }
+body.page-contact { padding-bottom: 0; }
 
 /* utility */
 .reveal {
@@ -629,3 +644,61 @@ p.lead { font-size: 1.15rem; line-height: 1.7; color: var(--ink-soft); }
 .mb-1 { margin-bottom: 1rem; }
 .mb-2 { margin-bottom: 2rem; }
 .mb-3 { margin-bottom: 3rem; }
+
+/* ----------------------------------------------------------------
+   Accessibility & motion preference (added per /impeccable audit P0/P1)
+   ---------------------------------------------------------------- */
+
+/* Global focus-visible — WCAG 2.4.7. Per-component overrides further down. */
+:focus { outline: none; }
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.btn:focus-visible,
+.nav__cta:focus-visible { outline-offset: 4px; }
+.form input:focus-visible,
+.form select:focus-visible,
+.form textarea:focus-visible {
+  outline: none;
+  border-bottom-color: var(--accent);
+  box-shadow: 0 1px 0 0 var(--accent);
+}
+
+/* Honor user motion preferences. WCAG 2.3.3.
+   Strips hero crossfade, reveal animations, FAQ expand. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .hero__slide { transition: none; }
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* Lighten scope-of-work bullets — was Cormorant 1.15rem with per-item rules (visually busy per critique).
+   Switch to body sans, drop rules, give consistent vertical rhythm. */
+.scope-list { list-style: none; padding: 0; margin: 0; }
+.scope-list li {
+  font-family: var(--sans);
+  font-size: 0.98rem;
+  line-height: 1.55;
+  padding: 0.45rem 0 0.45rem 1.35rem;
+  position: relative;
+  color: var(--ink-soft);
+}
+.scope-list li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0.95em;
+  width: 0.6rem; height: 1px;
+  background: var(--accent);
+}
+
+/* FAQ accordion ARIA pattern — make the button look identical whether aria-expanded true/false */
+.faq__q[aria-expanded] { background: none; border: none; }

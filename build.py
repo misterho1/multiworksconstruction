@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Multiworks Construction LLC — static site generator.
+"""Multiworks Construction LLC, static site generator.
 
 Emits every HTML page from a shared template and content data.
 Image URLs come from assets/img/manifest.json (Higgsfield CDN).
@@ -23,7 +23,54 @@ ADDRESS_LOCALITY = "Salt Lake City"
 ADDRESS_STATE = "UT"
 ADDRESS_POSTAL = "84101"
 DOMAIN = "https://multiworksconstruction.com"
-SITE_DESC_SHORT = "Utah's high-end design-build remodeler — whole-home remodels, kitchens, baths, basements, additions and commercial buildouts. Licensed. Insured. On time. On budget."
+SITE_DESC_SHORT = "Utah high-end remodeling and design-build contractor. Whole-home transformations, kitchens, baths, additions and commercial buildouts. Licensed, insured, locally owned."
+
+# Hero strategy: five photos on a 6.5s crossfade (was ten on 1.8s, anxious per critique).
+# Each carries real descriptive alt text, the previous data-bg divs had none, WCAG 1.1.1 violation.
+HERO = [
+    ("hero-01", "White oak shaker kitchen with brass pulls and a waterfall quartz island, finished by Multiworks on a Holladay remodel."),
+    ("hero-03", "Park City whole-home remodel exterior at golden hour, mountain ridgeline behind cedar siding."),
+    ("hero-05", "Holladay primary bath with a curbless walk-in shower, freestanding tub and warmed limestone floor."),
+    ("hero-07", "Sandy basement build-out with home theater, walnut wet bar and integrated lighting."),
+    ("hero-09", "Salt Lake City home addition with mountain-view picture windows and white oak floors."),
+]
+
+# Per-image alt text for service triptychs. Falls back to a generic per-service template
+# if a specific entry isn't present. Used by page_service().
+IMAGE_ALTS = {
+    "custom-home-01": "Custom Utah home exterior with stone and timber detail",
+    "whole-home-01": "Open-plan whole-home remodel with vaulted ceiling and oak floors",
+    "whole-home-02": "Living room remodel with new fireplace surround and built-ins",
+    "whole-home-03": "Reworked staircase and foyer with curated lighting",
+    "kitchen-01": "Custom kitchen with shaker cabinets, brass pulls and quartz waterfall island",
+    "kitchen-02": "Range wall with hood vent and hand-glazed backsplash",
+    "kitchen-03": "Walk-in pantry build-out with marble counters and integrated storage",
+    "bathroom-01": "Primary bathroom with curbless walk-in shower and stone floor",
+    "bathroom-02": "Freestanding soaking tub against a fluted-stone feature wall",
+    "bathroom-03": "Double-vanity bathroom with integrated lighted mirrors",
+    "basement-01": "Basement home theater with riser seating and acoustic paneling",
+    "basement-02": "Basement wet bar with backlit glass shelving and walnut cabinetry",
+    "basement-03": "Finished basement guest suite with custom millwork",
+    "additions-01": "Second-story home addition tied into an existing roofline",
+    "additions-02": "Primary suite addition with corner picture windows",
+    "additions-03": "Detached ADU casita with covered entry porch",
+    "outdoor-01": "Covered patio with outdoor kitchen and fire feature",
+    "outdoor-02": "Pergola over a paver patio with integrated lighting",
+    "outdoor-03": "Pool deck with stone hardscape and mountain view",
+    "commercial-01": "Restaurant build-out with exposed beams and open kitchen pass",
+    "commercial-02": "Tenant-improvement office buildout with glass partition walls",
+    "commercial-03": "Retail storefront finish-out with custom millwork display",
+    "design-build-01": "Architectural plan review with project manager and client",
+    "design-build-02": "Interior selections board with stone, wood and tile samples",
+    "design-build-03": "On-site walkthrough with framer and superintendent",
+    "teardown-01": "Lot prep for a teardown rebuild project",
+    "teardown-02": "New foundation pour on a previously tear-down lot",
+    "teardown-03": "Completed rebuild home in a mature neighborhood",
+}
+
+def alt_for(name):
+    """Return descriptive alt text for an image, or a sane fallback."""
+    return IMAGE_ALTS.get(name, f"Multiworks Construction project photograph: {name}")
 
 with open(MANIFEST) as f:
     IMG = json.load(f)
@@ -56,7 +103,7 @@ SERVICES = [
         "blurb": "Reimagine the home you already own. Whole-home remodels, additions and structural reworks that respect the bones and elevate the experience.",
         "hero_img": "whole-home-01",
         "imgs": ["whole-home-01", "whole-home-02", "whole-home-03"],
-        "intro": "Sometimes the right move isn't a new build — it's reinventing the home you're already in. Whole-home remodels are our craft. We open walls, raise ceilings, replan flow, modernize systems, and bring older Utah homes up to the standard of new construction — without losing the character that made you love the place to begin with.",
+        "intro": "Sometimes the right move isn't a new build, it's reinventing the home you're already in. Whole-home remodels are our craft. We open walls, raise ceilings, replan flow, modernize systems, and bring older Utah homes up to the standard of new construction, without losing the character that made you love the place to begin with.",
         "what_we_do": [
             "Structural reworks, load-bearing wall removal, beam install",
             "Full mechanical, electrical and plumbing rework to code",
@@ -68,11 +115,11 @@ SERVICES = [
         ],
         "faq": [
             ("Can we live in the house during a whole-home remodel?",
-             "Often, yes — we plan in phases so one side of the home stays habitable while the other is under construction. For larger or more invasive renovations, we'll be honest if temporary housing is the smarter call."),
+             "Often, yes, we plan in phases so one side of the home stays habitable while the other is under construction. For larger or more invasive renovations, we'll be honest if temporary housing is the smarter call."),
             ("How is a whole-home remodel priced?",
              "We provide a fixed-fee proposal after a site walk and a clear scope conversation. The price covers labor, materials, subcontractors and a defined allowance schedule for selections like tile, plumbing fixtures and lighting."),
             ("Will the remodel match the original architecture?",
-             "That's the goal whenever you want it to be. We have craftspeople who specialize in seamless additions and historically appropriate finishes — and we're equally happy to take a mid-century or 90s home in a fully modern direction."),
+             "That's the goal whenever you want it to be. We have craftspeople who specialize in seamless additions and historically appropriate finishes, and we're equally happy to take a mid-century or 90s home in a fully modern direction."),
         ],
     },
     {
@@ -80,22 +127,22 @@ SERVICES = [
         "num": "02",
         "title": "Kitchen Remodeling",
         "tag": "The most-used room, done right",
-        "blurb": "Custom kitchens engineered around how you actually cook, host and live — not a stock layout pulled from a showroom.",
+        "blurb": "Custom kitchens engineered around how you actually cook, host and live, not a stock layout pulled from a showroom.",
         "hero_img": "kitchen-01",
         "imgs": ["kitchen-01", "kitchen-02", "kitchen-03"],
         "intro": "A kitchen remodel is a high-stakes investment in your daily life and your home's resale value. We approach kitchens as a craft: layout first, then cabinetry, then appliances and finishes. Whether you want a transitional white-and-brass classic, a moody English cottage kitchen or a fully modern chef's space, our team plans, builds and installs every component.",
         "what_we_do": [
             "Layout redesign, island reconfiguration, wall removal",
-            "Fully custom cabinetry — paint-grade, stain-grade or quarter-sawn hardwood",
+            "Fully custom cabinetry, paint-grade, stain-grade or quarter-sawn hardwood",
             "Stone, quartz and porcelain countertops, full-height backsplashes",
             "Built-in appliance packages (Wolf, Sub-Zero, Miele, Thermador)",
             "Plumbing, electrical, gas and HVAC reworks to support new layouts",
             "Hood vents, pantry build-outs, butler's pantries, beverage stations",
-            "Lighting design — recessed, under-cabinet, decorative pendants",
+            "Lighting design, recessed, under-cabinet, decorative pendants",
         ],
         "faq": [
             ("How long does a luxury kitchen remodel take?",
-             "Most full kitchen remodels take 10–16 weeks from demo to final punch. Cabinetry lead times drive the schedule — we order early and stage delivery to minimize the time you're without a kitchen."),
+             "Most full kitchen remodels take 10 to 16 weeks from demo to final punch. Cabinetry lead times drive the schedule, we order early and stage delivery to minimize the time you're without a kitchen."),
             ("What's a typical budget range?",
              "Most of our kitchen projects in Salt Lake City and Park City fall between $80K and $250K, depending on size, custom cabinetry, appliance package and stone selections. We're happy to give you a realistic range during the first conversation."),
             ("Do you handle the design or do I need a separate kitchen designer?",
@@ -107,10 +154,10 @@ SERVICES = [
         "num": "03",
         "title": "Bathroom Remodeling",
         "tag": "Master suites, baths, powder rooms",
-        "blurb": "Spa-grade primary baths, guest baths, powder rooms and full master suite remodels — built waterproof, on time, on budget.",
+        "blurb": "Spa-grade primary baths, guest baths, powder rooms and full master suite remodels, built waterproof, on time, on budget.",
         "hero_img": "bathroom-01",
         "imgs": ["bathroom-01", "bathroom-02", "bathroom-03"],
-        "intro": "Bathrooms are unforgiving — every joint has to be waterproof, every fixture has to be right the first time, every tile cut has to line up. Multiworks builds bathrooms the way a yacht is built: methodically, with experienced trades, and zero shortcuts behind the walls. Our master suites, primary baths, guest baths and powder rooms are the most-photographed rooms we finish.",
+        "intro": "Bathrooms are unforgiving, every joint has to be waterproof, every fixture has to be right the first time, every tile cut has to line up. Multiworks builds bathrooms the way a yacht is built: methodically, with experienced trades, and zero shortcuts behind the walls. Our master suites, primary baths, guest baths and powder rooms are the most-photographed rooms we finish.",
         "what_we_do": [
             "Master bath suite buildouts with separate water closets, dressing rooms, dual vanities",
             "Curbless walk-in showers, steam showers, body-spray systems",
@@ -122,7 +169,7 @@ SERVICES = [
         ],
         "faq": [
             ("How long does a bathroom remodel take?",
-             "A primary bath suite usually takes 6–10 weeks. Guest baths and powder rooms typically finish in 4–6 weeks. We sequence selections and trades to keep momentum without compromise."),
+             "A primary bath suite usually takes 6 to 10 weeks. Guest baths and powder rooms typically finish in 4 to 6 weeks. We sequence selections and trades to keep momentum without compromise."),
             ("What's a realistic budget for a master bathroom in Utah?",
              "A high-end primary bath in Salt Lake or Park City typically runs $60K–$150K depending on size, stone, tile, fixtures and whether structural changes are involved."),
             ("Will my bathroom be torn up for the whole project?",
@@ -134,10 +181,10 @@ SERVICES = [
         "num": "04",
         "title": "Basement Finishing",
         "tag": "Add usable square footage downstairs",
-        "blurb": "Unlock thousands of sq ft below grade — theaters, gyms, wine rooms, guest suites, full apartments, and the playroom the kids actually use.",
+        "blurb": "Unlock thousands of sq ft below grade, theaters, gyms, wine rooms, guest suites, full apartments, and the playroom the kids actually use.",
         "hero_img": "basement-01",
         "imgs": ["basement-01", "basement-02", "basement-03"],
-        "intro": "A finished basement is the single highest-ROI square footage you can add to a Utah home. Most of our clients walk in expecting a finished rec room and walk out with a guest suite, a home theater, a wine cellar, a gym, a wet bar, and a place the family actually wants to spend time. We handle egress, framing, mechanical, electrical, plumbing, drywall, finish — and the permits.",
+        "intro": "A finished basement is the single highest-ROI square footage you can add to a Utah home. Most of our clients walk in expecting a finished rec room and walk out with a guest suite, a home theater, a wine cellar, a gym, a wet bar, and a place the family actually wants to spend time. We handle egress, framing, mechanical, electrical, plumbing, drywall, finish, and the permits.",
         "what_we_do": [
             "Egress window install and full code compliance",
             "Home theaters with riser platforms, acoustic panels, smart AV pre-wire",
@@ -149,9 +196,9 @@ SERVICES = [
         ],
         "faq": [
             ("How long does it take to finish a basement?",
-             "Most finished basements in our catalog take 8–14 weeks once permits are issued. Larger basements with bathrooms, wet bars and wine rooms run toward the longer end."),
+             "Most finished basements in our catalog take 8 to 14 weeks once permits are issued. Larger basements with bathrooms, wet bars and wine rooms run toward the longer end."),
             ("Do I need a permit to finish my basement?",
-             "Yes — every Utah municipality requires a permit for adding bedrooms, bathrooms, kitchens or any structural and electrical work. We pull all permits and schedule inspections."),
+             "Yes. every Utah municipality requires a permit for adding bedrooms, bathrooms, kitchens or any structural and electrical work. We pull all permits and schedule inspections."),
             ("Can I add a rental unit (ADU) in my basement?",
              "Often, yes. Many Salt Lake County cities now allow internal accessory dwelling units. We'll check zoning, walkout/egress requirements and utility separation during the initial consultation."),
         ],
@@ -161,10 +208,10 @@ SERVICES = [
         "num": "05",
         "title": "Home Additions & ADUs",
         "tag": "Add space, value and function",
-        "blurb": "Second-story additions, primary suite additions, sunrooms, in-law suites and detached ADUs (casitas) — built to look like they were always there.",
+        "blurb": "Second-story additions, primary suite additions, sunrooms, in-law suites and detached ADUs (casitas), built to look like they were always there.",
         "hero_img": "additions-01",
         "imgs": ["additions-01", "additions-02", "additions-03"],
-        "intro": "Outgrew the floor plan but love the neighborhood? We add rooms, stories, suites and detached accessory dwelling units (ADUs / casitas) onto Utah homes every year. Additions are tricky — roofline tie-ins, structural reinforcement, utility runs — and we handle every piece of it so the finished result looks original.",
+        "intro": "Outgrew the floor plan but love the neighborhood? We add rooms, stories, suites and detached accessory dwelling units (ADUs / casitas) onto Utah homes every year. Additions are tricky, roofline tie-ins, structural reinforcement, utility runs, and we handle every piece of it so the finished result looks original.",
         "what_we_do": [
             "Second-story additions with engineered floor systems and stair design",
             "Primary suite additions: bedroom, bath, walk-in closet, sitting area",
@@ -176,7 +223,7 @@ SERVICES = [
         ],
         "faq": [
             ("Is it cheaper to add on or move?",
-             "Almost always cheaper to add on — and you keep the lot, the neighborhood, the schools, the trees. We can give you a realistic cost-vs-move analysis in our first meeting."),
+             "Almost always cheaper to add on, and you keep the lot, the neighborhood, the schools, the trees. We can give you a realistic cost-vs-move analysis in our first meeting."),
             ("Can you add a second story to a 1950s or 60s home?",
              "Yes. Older Utah homes usually require structural reinforcement of the foundation and existing walls, and we'll evaluate that before quoting. We've added second stories to ramblers and bungalows across the Wasatch Front."),
             ("Are ADUs legal in Utah?",
@@ -191,10 +238,10 @@ SERVICES = [
         "blurb": "Outdoor kitchens, covered patios, pergolas, pools, fire features and mountain-view living rooms designed for Utah's seasons.",
         "hero_img": "outdoor-01",
         "imgs": ["outdoor-01", "outdoor-02", "outdoor-03"],
-        "intro": "Utah outdoors is the reason most of us live here. We design and build outdoor living spaces that work nine months of the year — covered patios with heaters and motorized screens, outdoor kitchens, fire pits, fireplaces, pergolas, infinity pools and hardscape that integrates seamlessly with the home and the mountains.",
+        "intro": "Utah outdoors is the reason most of us live here. We design and build outdoor living spaces that work nine months of the year, covered patios with heaters and motorized screens, outdoor kitchens, fire pits, fireplaces, pergolas, infinity pools and hardscape that integrates seamlessly with the home and the mountains.",
         "what_we_do": [
             "Covered patios and pavilions with structural roof systems",
-            "Outdoor kitchens — built-in grills, pizza ovens, refrigeration, sinks",
+            "Outdoor kitchens, built-in grills, pizza ovens, refrigeration, sinks",
             "Fire pits, gas fireplaces, fire bowls and fire tables",
             "Pergolas and louvered roof systems (Struxure, Equinox)",
             "Pools, spas, swim-jet pools and integrated water features",
@@ -205,7 +252,7 @@ SERVICES = [
             ("When is the best time to build an outdoor living space in Utah?",
              "We build year-round but plan most projects for completion by Memorial Day. Reach out in fall or winter for the best installer availability and finish before summer entertaining season."),
             ("Do I need a permit for a covered patio or pergola?",
-             "Most permanent structures require permits — we handle them. Detached pergolas under a certain size and with no electrical sometimes don't, but we always confirm with the AHJ first."),
+             "Most permanent structures require permits, we handle them. Detached pergolas under a certain size and with no electrical sometimes don't, but we always confirm with the AHJ first."),
         ],
     },
     {
@@ -228,9 +275,9 @@ SERVICES = [
         ],
         "faq": [
             ("Do you work with landlords and property managers?",
-             "Yes — much of our commercial work is initiated by property owners and managers for TI buildouts. We handle landlord work-letter compliance, scope reconciliation and final lien releases."),
+             "Yes. much of our commercial work is initiated by property owners and managers for TI buildouts. We handle landlord work-letter compliance, scope reconciliation and final lien releases."),
             ("How fast can you turn around a TI buildout?",
-             "A simple office TI can finish in 6–10 weeks. Restaurants and medical buildouts run 12–24 weeks depending on permitting and equipment lead times. We give you a written milestone schedule before lease commencement."),
+             "A simple office TI can finish in 6 to 10 weeks. Restaurants and medical buildouts run 12 to 24 weeks depending on permitting and equipment lead times. We give you a written milestone schedule before lease commencement."),
         ],
     },
     {
@@ -238,7 +285,7 @@ SERVICES = [
         "num": "08",
         "title": "Design-Build Services",
         "tag": "One team, one contract",
-        "blurb": "Architecture, interior design and construction under one roof — fewer handoffs, faster decisions, no finger-pointing.",
+        "blurb": "Architecture, interior design and construction under one roof, fewer handoffs, faster decisions, no finger-pointing.",
         "hero_img": "design-build-01",
         "imgs": ["design-build-01", "design-build-02", "design-build-03"],
         "intro": "Design-build is the most efficient way to plan and execute a major construction project. Architecture, engineering, interior design and construction live on the same team and the same contract. Decisions get made faster, change orders shrink, and there's never a finger-point between architect and contractor when something needs solving.",
@@ -253,7 +300,7 @@ SERVICES = [
         ],
         "faq": [
             ("How is design-build different from design-bid-build?",
-             "Design-bid-build splits the project across an architect and a contractor with two separate contracts. Design-build keeps them on one team with one contract — which usually means faster timelines, fewer change orders and aligned incentives."),
+             "Design-bid-build splits the project across an architect and a contractor with two separate contracts. Design-build keeps them on one team with one contract, which usually means faster timelines, fewer change orders and aligned incentives."),
             ("Will design-build cost more?",
              "Almost always less, when you account for the full project. Construction-aware design avoids the expensive change orders that happen when an architect designs without contractor input."),
         ],
@@ -271,10 +318,10 @@ SERVICE_AREAS = [
 ]
 
 PROCESS = [
-    ("Consult", "We meet at your property or our office, walk the project, listen carefully, and put a realistic budget and timeline on the table — usually inside a week."),
+    ("Consult", "We meet at your property or our office, walk the project, listen carefully, and put a realistic budget and timeline on the table, usually inside a week."),
     ("Design", "Plans, elevations, 3D renderings and a written specification. You see exactly what you're getting before a single dollar of construction is spent."),
     ("Build", "One project manager, one schedule, dedicated trades. Bi-weekly updates with photos, milestones and any change orders signed before work proceeds."),
-    ("Hand-off", "Final walk-through, punch list completion, warranty package, and a homeowner's manual for every system, finish and serial number in your home."),
+    ("Hand-off", "Final walk-through, punch list completion, warranty package, and a complete project handbook covering every system, finish, and serial number installed."),
 ]
 
 # ----------------------------------------------------------------
@@ -284,7 +331,7 @@ PROCESS = [
 def esc(s):
     return html.escape(s, quote=True)
 
-def common_head(title, description, canonical_path, og_image_name, extra_jsonld=None):
+def common_head(title, description, canonical_path, og_image_name, extra_jsonld=None, body_class=""):
     og_image = absolute_url(img(og_image_name) if og_image_name else img("hero-01"))
     canonical = f"{DOMAIN}{canonical_path}"
     local_business_jsonld = {
@@ -351,10 +398,13 @@ def common_head(title, description, canonical_path, og_image_name, extra_jsonld=
 <meta name="geo.placename" content="Salt Lake City, Utah">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="{absolute_url(img('hero-01'))}" fetchpriority="high">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Sora:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Sora:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/assets/styles.css">
 {scripts}
 </head>
-<body>"""
+<body{(' class="' + body_class + '"') if body_class else ''}>"""
 
 def nav_block(current=""):
     def li(slug, label, href=None):
@@ -381,8 +431,8 @@ def nav_block(current=""):
 <a class="tap-call" href="tel:{PHONE_TEL}">Call {PHONE}</a>
 """
 
-def cta_band(headline="Ready to <em>build something</em> remarkable?",
-             body=f"Schedule a no-pressure consultation with our Utah team. We'll listen, walk the project, and put real numbers and a real timeline on paper — usually inside a week."):
+def cta_band(headline="Ready to build something remarkable?",
+             body=f"Schedule a no-pressure consultation with our Utah team. We'll listen, walk the project, and put real numbers and a real timeline on paper, usually inside a week."):
     return f"""<section class="cta-band">
   <div class="wrap reveal">
     <span class="eyebrow" style="color:var(--accent)">Let's talk</span>
@@ -408,15 +458,15 @@ def footer_block():
         <p class="footer__about">A Utah high-end remodeling contractor for whole-home remodels, kitchens, baths, basements, additions and commercial buildouts. Licensed. Insured. Locally owned.</p>
       </div>
       <div>
-        <h4>Services</h4>
+        <h3 class="footer__heading">Services</h3>
         <ul>{service_lis}</ul>
       </div>
       <div>
-        <h4>Service Areas</h4>
+        <h3 class="footer__heading">Service Areas</h3>
         <ul>{areas_lis}</ul>
       </div>
       <div class="footer__contact">
-        <h4>Contact</h4>
+        <h3 class="footer__heading">Contact</h3>
         <a class="phone" href="tel:{PHONE_TEL}">{PHONE}</a>
         <p><a href="mailto:{EMAIL}">{EMAIL}</a></p>
         <p>{ADDRESS_LOCALITY}, {ADDRESS_STATE}</p>
@@ -438,9 +488,16 @@ def footer_block():
 # ----------------------------------------------------------------
 
 def page_home():
+    # Hero: five <img> elements (was ten data-bg divs). First eagerly loaded + fetchpriority high,
+    # rest lazy. Each carries real descriptive alt text, WCAG 1.1.1 was failing site-wide.
     slides_html = "\n".join(
-        f'<div class="hero__slide{" is-active" if i==0 else ""}" data-bg="{img(f"hero-{i+1:02d}")}" aria-hidden="true"></div>'
-        for i in range(10)
+        f'<img class="hero__slide{" is-active" if i==0 else ""}" '
+        f'src="{img(name)}" alt="{esc(alt)}" '
+        f'loading="{"eager" if i==0 else "lazy"}" '
+        f'decoding="{"sync" if i==0 else "async"}" '
+        f'fetchpriority="{"high" if i==0 else "low"}" '
+        f'width="1376" height="768">'
+        for i, (name, alt) in enumerate(HERO)
     )
     service_cards = "\n".join(
         f"""<a class="service-card" href="/{s['slug']}.html">
@@ -453,17 +510,17 @@ def page_home():
     )
     areas_div = "\n".join(f"<div>{esc(a)}</div>" for a in SERVICE_AREAS)
     home_faqs = [
-        ("Where in Utah does Multiworks Construction build?",
+        ("Where in Utah does Multiworks Construction work?",
          "We serve the entire Wasatch Front: Salt Lake City, Park City, Holladay, Sandy, Draper, Lehi, Provo, Bountiful, Cottonwood Heights and surrounding communities in Salt Lake, Utah, Summit and Davis counties."),
         ("Are you licensed and insured in Utah?",
-         "Yes — Multiworks Construction LLC is a fully licensed Utah general contractor carrying commercial general liability and workers' comp insurance. Documentation is available on request."),
+         "Yes. Multiworks Construction LLC is a fully licensed Utah general contractor carrying commercial general liability and workers' comp insurance. Documentation is available on request."),
         ("Do you handle architecture and design, or only construction?",
          "Both. Our design-build team handles architecture, interior design, structural engineering and construction under one contract. We're also happy to work with architects and designers you've already chosen."),
-        ("How do you price projects — fixed bid or cost-plus?",
+        ("How do you price projects: fixed bid or cost-plus?",
          "We default to a transparent fixed-fee model. After selections are made, we lock the construction price with a clear allowance schedule. Cost-plus is offered on highly custom or unique projects."),
         ("How long is the wait to start a new project?",
-         "Lead times vary by project size and trade availability. We typically schedule new project starts 6–12 weeks out and can sometimes start sooner. Call us for current availability."),
-        ("What sets Multiworks apart from other Utah general contractors?",
+         "Lead times vary by project size and trade availability. We typically schedule new project starts 6 to 12 weeks out and can sometimes start sooner. Call us for current availability."),
+        ("What sets Multiworks apart from other Utah remodelers?",
          "Single point of accountability, transparent fixed-fee pricing, in-house design and trades, written milestone schedules, and a 24-month workmanship warranty on every project."),
     ]
     faq_html = "\n".join(
@@ -479,7 +536,7 @@ def page_home():
         ],
     }
     return common_head(
-        title=f"Multiworks Construction LLC | Utah High-End Remodeler & Design-Build Contractor — {ADDRESS_LOCALITY}",
+        title=f"Multiworks Construction LLC | Utah High-End Remodeler & Design-Build Contractor, {ADDRESS_LOCALITY}",
         description=SITE_DESC_SHORT,
         canonical_path="/",
         og_image_name="hero-01",
@@ -489,11 +546,11 @@ def page_home():
   <div class="hero__bg">{slides_html}</div>
   <div class="hero__inner">
     <span class="eyebrow hero__eyebrow">Salt Lake City · Park City · Wasatch Front</span>
-    <h1 class="hero__title">Utah high-end <em>remodels</em>, built without compromise.</h1>
-    <p class="hero__sub">Multiworks Construction is a high-end Utah remodeling contractor for clients who refuse to settle. From kitchens and bathrooms to whole-home transformations, additions and commercial buildouts, we work with one schedule, one team, and one standard: on time, on budget, no excuses.</p>
+    <h1 class="hero__title">Utah high-end remodels, built without compromise.</h1>
+    <p class="hero__sub">Multiworks Construction is a Utah remodeling and design-build contractor for clients who refuse to settle. Kitchens, bathrooms, whole-home transformations, additions, and commercial buildouts. One schedule, one team, one standard.</p>
     <div class="hero__cta">
       <a class="btn btn--solid" href="/contact.html">Start a project <span class="arrow">→</span></a>
-      <a class="btn btn--ghost-light" href="/services.html">Our services</a>
+      <a class="btn btn--ghost-light" href="tel:{PHONE_TEL}">Call {PHONE}</a>
     </div>
   </div>
   <div class="hero__meta">{PHONE}</div>
@@ -503,7 +560,7 @@ def page_home():
   <div class="wrap split reveal">
     <div>
       <span class="eyebrow">Multiworks Construction</span>
-      <h2 style="margin-top:1rem">A Utah remodeler for homes built to <em>outlast trends</em>.</h2>
+      <h2 style="margin-top:1rem">A Utah remodeler for homes built to outlast trends.</h2>
     </div>
     <div>
       <p class="lead">We remodel high-end homes along the Wasatch Front for clients who'd rather wait six months to do it right than three to do it twice. Every project gets a dedicated project manager, a written milestone schedule, transparent fixed-fee pricing, and a 24-month workmanship warranty.</p>
@@ -513,18 +570,11 @@ def page_home():
   </div>
 </section>
 
-<div class="stats wrap reveal">
-  <div class="stats__item"><div class="stats__num">100<sup>+</sup></div><div class="stats__label">Utah projects delivered</div></div>
-  <div class="stats__item"><div class="stats__num">$50M<sup>+</sup></div><div class="stats__label">Construction value built</div></div>
-  <div class="stats__item"><div class="stats__num">24<sub style="font-size:0.4em;color:var(--mute)">mo</sub></div><div class="stats__label">Workmanship warranty</div></div>
-  <div class="stats__item"><div class="stats__num">5.0<sup>★</sup></div><div class="stats__label">Average client rating</div></div>
-</div>
-
 <section class="section">
   <div class="wrap">
     <div class="section__head reveal">
       <span class="eyebrow">What we do</span>
-      <h2 style="margin-top:1rem">Ten services. <em>One team.</em></h2>
+      <h2 style="margin-top:1rem">Eight services. One team.</h2>
       <p class="lead">From design and architecture through final punch list, Multiworks self-performs the work that matters and partners only with Utah trades we'd hire to work on our own homes.</p>
     </div>
   </div>
@@ -539,7 +589,7 @@ def page_home():
   <div class="wrap">
     <div class="section__head reveal">
       <span class="eyebrow">How we work</span>
-      <h2 style="color:var(--bone);margin-top:1rem">The Multiworks <em>process</em>.</h2>
+      <h2 style="color:var(--bone);margin-top:1rem">The Multiworks process.</h2>
     </div>
     <div class="process reveal">
 """ + "\n".join(
@@ -554,7 +604,7 @@ def page_home():
   <div class="wrap reveal">
     <div class="testimonial">
       <span class="eyebrow eyebrow--mute" style="display:block;margin-bottom:1.5rem">A recent client</span>
-      <p class="testimonial__quote">"Multiworks didn't just remodel our home — they protected our investment, our schedule and our sanity. Every milestone hit on time. Every change order arrived in writing before work started. It's the way construction is supposed to work."</p>
+      <p class="testimonial__quote">"Multiworks didn't just remodel our home. They protected our investment, our schedule, and our sanity. Every milestone hit on time. Every change order arrived in writing before work started. It's the way construction is supposed to work."</p>
       <div class="testimonial__attr">Holladay, Utah · Whole-Home Remodel Client</div>
     </div>
   </div>
@@ -564,8 +614,8 @@ def page_home():
   <div class="wrap">
     <div class="section__head section__head--center reveal">
       <span class="eyebrow">Service areas</span>
-      <h2 style="margin-top:1rem">Building across the <em>Wasatch Front</em>.</h2>
-      <p>Salt Lake County, Utah County, Summit County and Davis County — and the in-between mountain communities most contractors won't drive to.</p>
+      <h2 style="margin-top:1rem">Across the Wasatch Front.</h2>
+      <p>Salt Lake County, Utah County, Summit County and Davis County, plus the in-between mountain communities most contractors won't drive to.</p>
     </div>
     <div class="areas-grid reveal">{areas_div}</div>
   </div>
@@ -575,7 +625,7 @@ def page_home():
   <div class="wrap">
     <div class="section__head section__head--center reveal">
       <span class="eyebrow">Common questions</span>
-      <h2 style="margin-top:1rem">What clients ask <em>before</em> they hire us.</h2>
+      <h2 style="margin-top:1rem">What clients ask before they hire us.</h2>
     </div>
     <div class="faq reveal">{faq_html}</div>
   </div>
@@ -585,11 +635,17 @@ def page_home():
 {footer_block()}"""
 
 def page_service(s):
+    # Triptych converted from data-bg divs to <img> with descriptive alt text per image.
     triptych = "\n".join(
-        f'<div class="triptych__item" data-bg="{img(name)}" role="img" aria-label="{esc(s["title"])} example"></div>'
+        f'<div class="triptych__item"><img src="{img(name)}" alt="{esc(alt_for(name))}" loading="lazy" decoding="async" width="800" height="600"></div>'
         for name in s["imgs"]
     )
-    bullets = "\n".join(f"<li style='padding:0.5rem 0;border-bottom:1px solid var(--rule);font-family:var(--serif);font-size:1.15rem'>{esc(b)}</li>" for b in s["what_we_do"])
+    # Scope-of-work bullets now use a real class (.scope-list) instead of inline-styled serif rules.
+    # Critique flagged the previous Cormorant 1.15rem with per-item rules as visually noisy.
+    bullets = "\n".join(f"<li>{esc(b)}</li>" for b in s["what_we_do"])
+    # Service title rendered with proper casing for headlines (fixes "commercial & ti" lowercase bug).
+    pretty_title = s["title"]
+    pretty_lower = pretty_title  # keep original case in body prose
     faq_html = "\n".join(
         f"""<div class="faq__item"><button class="faq__q" type="button">{esc(q)} <span class="plus">+</span></button><div class="faq__a"><p>{esc(a)}</p></div></div>"""
         for q, a in s["faq"]
@@ -630,11 +686,11 @@ def page_service(s):
         extra_jsonld=[service_jsonld, faq_jsonld],
     ) + nav_block(current=s["slug"]) + f"""
 <section class="page-hero">
-  <div class="page-hero__bg" data-bg="{img(s['hero_img'])}"></div>
+  <div class="page-hero__bg"><img src="{img(s['hero_img'])}" alt="{esc(alt_for(s['hero_img']))}" loading="eager" fetchpriority="high" decoding="sync" width="1376" height="768"></div>
   <div class="page-hero__inner">
-    <div class="crumbs"><a href="/">Home</a> · <a href="/services.html">Services</a> · {esc(s['title'])}</div>
+    <div class="crumbs"><a href="/">Home</a> · <a href="/services.html">Services</a> · {esc(pretty_title)}</div>
     <span class="eyebrow" style="color:var(--accent)">Service {s['num']} · {esc(s['tag'])}</span>
-    <h1 class="page-hero__title" style="margin-top:1rem">{esc(s['title'])} in Utah.</h1>
+    <h1 class="page-hero__title" style="margin-top:1rem">{esc(pretty_title)} in Utah.</h1>
     <p class="page-hero__sub">{esc(s['blurb'])}</p>
   </div>
 </section>
@@ -643,7 +699,7 @@ def page_service(s):
   <div class="wrap split split--narrow reveal">
     <div>
       <span class="eyebrow">What this is</span>
-      <h2 style="margin-top:1rem">A <em>better</em> way to do {esc(s['title'].lower())}.</h2>
+      <h2 style="margin-top:1rem">A better way to do {esc(pretty_lower)}.</h2>
     </div>
     <div>
       <p class="lead">{esc(s['intro'])}</p>
@@ -659,11 +715,11 @@ def page_service(s):
   <div class="wrap split reveal">
     <div>
       <span class="eyebrow">Scope of work</span>
-      <h2 style="margin-top:1rem">What's included in our <em>{esc(s['title'].lower())}</em> service.</h2>
-      <p>Every project is custom, but here's what most {esc(s['title'].lower())} engagements with Multiworks include from kickoff to final walk-through:</p>
+      <h2 style="margin-top:1rem">What's included in our {esc(pretty_lower)} service.</h2>
+      <p>Every project is custom, but here's what most {esc(pretty_lower)} engagements with Multiworks include from kickoff to final walk-through:</p>
     </div>
     <div>
-      <ul style="list-style:none;padding:0;margin:0">{bullets}</ul>
+      <ul class="scope-list">{bullets}</ul>
     </div>
   </div>
 </section>
@@ -672,7 +728,7 @@ def page_service(s):
   <div class="wrap">
     <div class="section__head reveal">
       <span class="eyebrow">How we deliver</span>
-      <h2 style="color:var(--bone);margin-top:1rem">The Multiworks <em>process</em>.</h2>
+      <h2 style="color:var(--bone);margin-top:1rem">The Multiworks process.</h2>
     </div>
     <div class="process reveal">
 """ + "\n".join(
@@ -687,7 +743,7 @@ def page_service(s):
   <div class="wrap">
     <div class="section__head section__head--center reveal">
       <span class="eyebrow">Common questions</span>
-      <h2 style="margin-top:1rem">{esc(s['title'])} — <em>frequently asked</em>.</h2>
+      <h2 style="margin-top:1rem">{esc(pretty_title)}, frequently asked.</h2>
     </div>
     <div class="faq reveal">{faq_html}</div>
   </div>
@@ -697,7 +753,7 @@ def page_service(s):
   <div class="wrap">
     <div class="section__head reveal">
       <span class="eyebrow">Related work</span>
-      <h2 style="margin-top:1rem">Other ways we <em>build</em>.</h2>
+      <h2 style="margin-top:1rem">Other ways we build.</h2>
     </div>
   </div>
   <div class="wrap reveal">
@@ -705,7 +761,7 @@ def page_service(s):
   </div>
 </section>
 
-{cta_band(headline=f"Ready to start your <em>{esc(s['title'].lower())}</em> project?")}
+{cta_band(headline=f"Ready to start your {esc(pretty_lower)} project?")}
 {footer_block()}"""
 
 def page_services():
@@ -725,12 +781,12 @@ def page_services():
         og_image_name="hero-02",
     ) + nav_block(current="services") + f"""
 <section class="page-hero">
-  <div class="page-hero__bg" data-bg="{img('hero-02')}"></div>
+  <div class="page-hero__bg"><img src="{img('hero-02')}" alt="{esc(alt_for('hero-02') if 'hero-02' in IMAGE_ALTS else 'Multiworks Construction project: Park City whole-home remodel exterior')}" loading="eager" fetchpriority="high" decoding="sync" width="1376" height="768"></div>
   <div class="page-hero__inner">
     <div class="crumbs"><a href="/">Home</a> · Services</div>
     <span class="eyebrow" style="color:var(--accent)">Our services</span>
-    <h1 class="page-hero__title" style="margin-top:1rem">Ten services. <em>One Utah team.</em></h1>
-    <p class="page-hero__sub">From kitchen reworks to whole-home transformations and commercial tenant improvements — every service Multiworks delivers is held to the same standard: written schedule, fixed-fee pricing, dedicated project manager, 24-month warranty.</p>
+    <h1 class="page-hero__title" style="margin-top:1rem">Eight services. One Utah team.</h1>
+    <p class="page-hero__sub">From kitchen reworks to whole-home transformations and commercial tenant improvements, every service Multiworks delivers is held to the same standard: written schedule, fixed-fee pricing, dedicated project manager, 24-month warranty.</p>
   </div>
 </section>
 
@@ -744,7 +800,7 @@ def page_services():
   <div class="wrap">
     <div class="section__head section__head--center reveal">
       <span class="eyebrow">How we work</span>
-      <h2 style="margin-top:1rem">The Multiworks <em>process</em>.</h2>
+      <h2 style="margin-top:1rem">The Multiworks process.</h2>
       <p>A predictable, documented path from first call to final keys.</p>
     </div>
     <div class="process reveal">
@@ -767,40 +823,33 @@ def page_about():
         og_image_name="hero-05",
     ) + nav_block(current="about") + f"""
 <section class="page-hero">
-  <div class="page-hero__bg" data-bg="{img('hero-05')}"></div>
+  <div class="page-hero__bg"><img src="{img('hero-05')}" alt="{esc(alt_for('hero-05'))}" loading="eager" fetchpriority="high" decoding="sync" width="1376" height="768"></div>
   <div class="page-hero__inner">
     <div class="crumbs"><a href="/">Home</a> · About</div>
     <span class="eyebrow" style="color:var(--accent)">About Multiworks</span>
-    <h1 class="page-hero__title" style="margin-top:1rem">Utah-built. <em>Client-aligned.</em> No drama.</h1>
-    <p class="page-hero__sub">Multiworks Construction LLC is a Utah-owned high-end remodeling contractor. We remodel existing homes, build thoughtful additions, and finish out commercial spaces along the Wasatch Front — for clients who'd rather hire one team than coordinate five.</p>
+    <h1 class="page-hero__title" style="margin-top:1rem">Utah-built. Client-aligned. No drama.</h1>
+    <p class="page-hero__sub">Multiworks Construction LLC is a Utah-owned high-end remodeling contractor. We remodel existing homes, build thoughtful additions, and finish out commercial spaces along the Wasatch Front, for clients who'd rather hire one team than coordinate five.</p>
   </div>
 </section>
 
 <section class="section section--paper">
   <div class="wrap split reveal">
-    <div class="split__image" data-bg="{img('design-build-02')}"></div>
+    <div class="split__image"><img src="{img('design-build-02')}" alt="{esc(alt_for('design-build-02'))}" loading="lazy" decoding="async" width="800" height="1000"></div>
     <div>
       <span class="eyebrow">Our story</span>
-      <h2 style="margin-top:1rem">A general contractor that <em>actually</em> answers the phone.</h2>
-      <p class="lead">Multiworks Construction was founded on a simple frustration: too many Utah construction projects start with a smile and a promise, then drift into missed milestones, mystery change orders and silent project managers.</p>
-      <p>We built Multiworks to be the contractor we wish we'd hired. Single point of accountability. Written milestone schedules. Fixed-fee pricing. Change orders signed before work starts, never after. And the people who answer your call on Tuesday are the same people swinging hammers on your job Wednesday.</p>
+      <h2 style="margin-top:1rem">A contractor that actually answers the phone.</h2>
+      <p class="lead">Multiworks Construction was founded on a simple frustration: too many Utah construction projects start with a smile and a promise, then drift into missed milestones, mystery change orders, and silent project managers.</p>
+      <p>We built Multiworks to be the contractor we wish we'd hired. Single point of accountability. Written milestone schedules. Fixed-fee pricing. Change orders signed before work starts, never after. The people who answer your call on Tuesday are the same people swinging hammers on your job Wednesday.</p>
       <a class="btn btn--ghost" href="/contact.html">Start a project <span class="arrow">→</span></a>
     </div>
   </div>
 </section>
 
-<div class="stats wrap reveal">
-  <div class="stats__item"><div class="stats__num">100<sup>+</sup></div><div class="stats__label">Utah projects delivered</div></div>
-  <div class="stats__item"><div class="stats__num">$50M<sup>+</sup></div><div class="stats__label">Construction value built</div></div>
-  <div class="stats__item"><div class="stats__num">24<sub style="font-size:0.4em;color:var(--mute)">mo</sub></div><div class="stats__label">Workmanship warranty</div></div>
-  <div class="stats__item"><div class="stats__num">5.0<sup>★</sup></div><div class="stats__label">Average client rating</div></div>
-</div>
-
 <section class="section">
   <div class="wrap">
     <div class="section__head reveal">
       <span class="eyebrow">What we believe</span>
-      <h2 style="margin-top:1rem">Five principles we won't <em>compromise</em> on.</h2>
+      <h2 style="margin-top:1rem">Four principles we won't compromise on.</h2>
     </div>
     <div class="process reveal">
       <div class="process__step"><div class="process__num">01</div><div class="process__title">Single accountability</div><div class="process__desc">One contract, one project manager, one number to call. Never "that's the architect's problem" or "talk to the subcontractor".</div></div>
@@ -815,7 +864,7 @@ def page_about():
   <div class="wrap reveal">
     <div class="testimonial">
       <span class="eyebrow" style="display:block;margin-bottom:1.5rem">A recent client</span>
-      <p class="testimonial__quote" style="color:var(--bone)">"You don't realize how rare honest construction is until you've experienced it. Multiworks ran our remodel like a Swiss watch — and made it look easy."</p>
+      <p class="testimonial__quote" style="color:var(--bone)">"You don't realize how rare honest construction is until you've experienced it. Multiworks ran our remodel like a Swiss watch and made it look easy."</p>
       <div class="testimonial__attr" style="color:var(--mute-2)">Park City · Remodel Client</div>
     </div>
   </div>
@@ -825,22 +874,23 @@ def page_about():
 {footer_block()}"""
 
 def page_portfolio():
-    # Mosaic from all service images
+    # Portfolio mosaic now uses <img loading="lazy">, was ~5.3 MB on first paint (no lazy on background-image).
     all_imgs = []
     for s in SERVICES:
         all_imgs.extend([(name, s["title"]) for name in s["imgs"]])
-    # Plus hero shots
-    for i in range(1, 11):
-        all_imgs.append((f"hero-{i:02d}", "Multiworks Construction"))
+    # Hero shots, limit to the 5 actually used elsewhere on the site for visual coherence.
+    for name, alt in HERO:
+        all_imgs.append((name, "Multiworks Construction"))
     mosaic = "\n".join(
-        f"""<a class="portfolio__item" href="#" style="background-image:url('{img(n)}')" aria-label="{esc(t)}">
-  <span class="portfolio__caption">{esc(t)}</span>
-</a>"""
+        f"""<figure class="portfolio__item">
+  <img src="{img(n)}" alt="{esc(alt_for(n))}" loading="lazy" decoding="async" width="800" height="600">
+  <figcaption class="portfolio__caption">{esc(t)}</figcaption>
+</figure>"""
         for n, t in all_imgs
     )
     return common_head(
-        title="Portfolio | Utah Remodels, Additions & Commercial — Multiworks Construction",
-        description="A selection of Multiworks Construction's recent Utah projects — whole-home remodels, kitchens, baths, basements, additions, outdoor living and commercial buildouts in Salt Lake City and Park City.",
+        title="Portfolio | Utah Remodels, Additions & Commercial · Multiworks Construction",
+        description="A selection of Multiworks Construction's recent Utah projects: whole-home remodels, kitchens, baths, basements, additions, outdoor living, and commercial buildouts in Salt Lake City and Park City.",
         canonical_path="/portfolio.html",
         og_image_name="hero-06",
     ) + nav_block(current="portfolio") + f"""
@@ -848,8 +898,9 @@ def page_portfolio():
 .portfolio-grid {{ display:grid; grid-template-columns: repeat(3, 1fr); gap:1px; background:var(--rule); border-block:1px solid var(--rule); }}
 @media (max-width:900px) {{ .portfolio-grid {{ grid-template-columns: repeat(2,1fr); }} }}
 @media (max-width:560px) {{ .portfolio-grid {{ grid-template-columns: 1fr; }} }}
-.portfolio__item {{ aspect-ratio: 4/3; background-size: cover; background-position: center; position: relative; overflow: hidden; }}
-.portfolio__item::after {{ content:''; position:absolute; inset:0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.65)); opacity: 0.6; transition: opacity 0.4s ease; }}
+.portfolio__item {{ aspect-ratio: 4/3; position: relative; overflow: hidden; margin: 0; }}
+.portfolio__item img {{ width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }}
+.portfolio__item::after {{ content:''; position:absolute; inset:0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.65)); opacity: 0.6; transition: opacity 0.4s ease; pointer-events: none; }}
 .portfolio__item:hover::after {{ opacity: 0.85; }}
 .portfolio__caption {{
   position:absolute; bottom:1.25rem; left:1.5rem; right:1.5rem;
@@ -862,40 +913,41 @@ def page_portfolio():
 </style>
 
 <section class="page-hero">
-  <div class="page-hero__bg" data-bg="{img('hero-06')}"></div>
+  <div class="page-hero__bg"><img src="{img('hero-06')}" alt="{esc(alt_for('hero-06') if 'hero-06' in IMAGE_ALTS else 'Recent Multiworks portfolio project')}" loading="eager" fetchpriority="high" decoding="sync" width="1376" height="768"></div>
   <div class="page-hero__inner">
     <div class="crumbs"><a href="/">Home</a> · Portfolio</div>
     <span class="eyebrow" style="color:var(--accent)">Selected work</span>
-    <h1 class="page-hero__title" style="margin-top:1rem">A selection of <em>recent work</em>.</h1>
-    <p class="page-hero__sub">Custom homes, whole-home remodels, kitchens, baths, basements, additions and outdoor living spaces from across Utah's Wasatch Front.</p>
+    <h1 class="page-hero__title" style="margin-top:1rem">A selection of recent work.</h1>
+    <p class="page-hero__sub">Whole-home remodels, kitchens, baths, basements, additions, and outdoor living spaces from across Utah's Wasatch Front.</p>
   </div>
 </section>
 
 <section class="section section--paper">
   <div class="wrap reveal" style="margin-bottom:3rem">
     <span class="eyebrow">Browse the work</span>
-    <h2 style="margin-top:1rem;max-width:24ch">Every photo here is a <em>real project</em> — or what your project could become.</h2>
+    <h2 style="margin-top:1rem;max-width:24ch">Every photo here is a real project, or what your project could become.</h2>
   </div>
   <div class="portfolio-grid reveal">{mosaic}</div>
 </section>
 
-{cta_band(headline="See something you <em>like</em>? Let's build yours.")}
+{cta_band(headline="See something you like? Let's build yours.")}
 {footer_block()}"""
 
 def page_contact():
     return common_head(
-        title="Contact Multiworks Construction | Utah General Contractor — Call or Get a Quote",
+        title="Contact Multiworks Construction | Utah General Contractor, Call or Get a Quote",
         description=f"Contact Multiworks Construction LLC for high-end remodels, additions and commercial work in Utah. Call {PHONE} or request a no-pressure consultation. Serving Salt Lake City, Park City and the Wasatch Front.",
         canonical_path="/contact.html",
         og_image_name="hero-08",
+        body_class="page-contact",
     ) + nav_block(current="contact") + f"""
 <section class="page-hero">
-  <div class="page-hero__bg" data-bg="{img('hero-08')}"></div>
+  <div class="page-hero__bg"><img src="{img('hero-08')}" alt="{esc(alt_for('hero-08') if 'hero-08' in IMAGE_ALTS else 'Multiworks Construction job site walkthrough')}" loading="eager" fetchpriority="high" decoding="sync" width="1376" height="768"></div>
   <div class="page-hero__inner">
     <div class="crumbs"><a href="/">Home</a> · Contact</div>
     <span class="eyebrow" style="color:var(--accent)">Let's talk</span>
-    <h1 class="page-hero__title" style="margin-top:1rem">Start your <em>Utah project</em>.</h1>
-    <p class="page-hero__sub">Call us, email us, or fill out the form. We'll respond within one business day, schedule a no-pressure site walk, and put real numbers and a real timeline on paper — usually within a week.</p>
+    <h1 class="page-hero__title" style="margin-top:1rem">Start your Utah project.</h1>
+    <p class="page-hero__sub">Call us, email us, or fill out the form. We'll respond within one business day, schedule a no-pressure site walk, and put real numbers and a real timeline on paper, usually within a week.</p>
   </div>
 </section>
 
