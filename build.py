@@ -23,7 +23,7 @@ ADDRESS_LOCALITY = "Salt Lake City"
 ADDRESS_STATE = "UT"
 ADDRESS_POSTAL = "84101"
 DOMAIN = "https://multiworksconstruction.com"
-SITE_DESC_SHORT = "Utah's design-build general contractor — custom homes, whole-home remodels, kitchens, baths and commercial construction. Licensed. Insured. On time. On budget."
+SITE_DESC_SHORT = "Utah's high-end design-build remodeler — whole-home remodels, kitchens, baths, basements, additions and commercial buildouts. Licensed. Insured. On time. On budget."
 
 with open(MANIFEST) as f:
     IMG = json.load(f)
@@ -49,37 +49,8 @@ def absolute_url(path):
 # ----------------------------------------------------------------
 SERVICES = [
     {
-        "slug": "custom-home-building",
-        "num": "01",
-        "title": "Custom Home Building",
-        "tag": "Ground-up custom residential",
-        "blurb": "Ground-up custom homes built to your land, your lifestyle and your standards — from foundation to final walk-through.",
-        "hero_img": "custom-home-01",
-        "imgs": ["custom-home-01", "custom-home-02", "custom-home-03"],
-        "intro": "Building a custom home is the single largest project most families ever undertake. We treat it that way. Multiworks Construction is a full-service Utah custom home builder serving Salt Lake City, Park City, Holladay, Draper, Sandy and the surrounding Wasatch Front. Every home we build is engineered for the site, the climate and the people who'll live in it — not pulled from a stock catalog.",
-        "what_we_do": [
-            "Lot evaluation, feasibility and site planning",
-            "Architectural design and structural engineering",
-            "Permitting and code compliance with city and county jurisdictions",
-            "Foundation, framing, mechanical, electrical and plumbing rough-in",
-            "Custom millwork, cabinetry and interior finish carpentry",
-            "Smart-home pre-wire, lighting design and integrated AV",
-            "Final landscape, hardscape and exterior detailing",
-        ],
-        "faq": [
-            ("How long does it take to build a custom home in Utah?",
-             "From the day permits are issued, most of our custom homes take 10–14 months to complete. Permitting, design and selections typically add another 3–6 months on the front end. We give you a written, milestone-based schedule before construction begins and update it every two weeks."),
-            ("Do you work from an architect we already hired, or do you have your own?",
-             "Both. We work seamlessly with outside architects you already love, and we also have a design-build team in-house for clients who want a single point of accountability from concept through move-in."),
-            ("How is pricing structured — fixed bid or cost-plus?",
-             "We default to a transparent fixed-fee model: we lock construction cost upfront after selections, with a clear allowance schedule and itemized line items. Cost-plus is available on highly custom or unique projects when fixed bid would unfairly penalize you with risk premiums."),
-            ("What areas of Utah do you build in?",
-             "Salt Lake County, Utah County, Summit County and Davis County — including Salt Lake City, Park City, Deer Valley, Holladay, Draper, Sandy, Lehi, Provo, Bountiful and Cottonwood Heights."),
-        ],
-    },
-    {
         "slug": "whole-home-remodeling",
-        "num": "02",
+        "num": "01",
         "title": "Whole-Home Remodeling",
         "tag": "Floor-to-ceiling transformations",
         "blurb": "Reimagine the home you already own. Whole-home remodels, additions and structural reworks that respect the bones and elevate the experience.",
@@ -106,7 +77,7 @@ SERVICES = [
     },
     {
         "slug": "kitchen-remodeling",
-        "num": "03",
+        "num": "02",
         "title": "Kitchen Remodeling",
         "tag": "The most-used room, done right",
         "blurb": "Custom kitchens engineered around how you actually cook, host and live — not a stock layout pulled from a showroom.",
@@ -133,7 +104,7 @@ SERVICES = [
     },
     {
         "slug": "bathroom-remodeling",
-        "num": "04",
+        "num": "03",
         "title": "Bathroom Remodeling",
         "tag": "Master suites, baths, powder rooms",
         "blurb": "Spa-grade primary baths, guest baths, powder rooms and full master suite remodels — built waterproof, on time, on budget.",
@@ -160,7 +131,7 @@ SERVICES = [
     },
     {
         "slug": "basement-finishing",
-        "num": "05",
+        "num": "04",
         "title": "Basement Finishing",
         "tag": "Add usable square footage downstairs",
         "blurb": "Unlock thousands of sq ft below grade — theaters, gyms, wine rooms, guest suites, full apartments, and the playroom the kids actually use.",
@@ -187,7 +158,7 @@ SERVICES = [
     },
     {
         "slug": "home-additions",
-        "num": "06",
+        "num": "05",
         "title": "Home Additions & ADUs",
         "tag": "Add space, value and function",
         "blurb": "Second-story additions, primary suite additions, sunrooms, in-law suites and detached ADUs (casitas) — built to look like they were always there.",
@@ -214,7 +185,7 @@ SERVICES = [
     },
     {
         "slug": "outdoor-living",
-        "num": "07",
+        "num": "06",
         "title": "Outdoor Living",
         "tag": "Patios, pergolas, kitchens, pools",
         "blurb": "Outdoor kitchens, covered patios, pergolas, pools, fire features and mountain-view living rooms designed for Utah's seasons.",
@@ -239,18 +210,18 @@ SERVICES = [
     },
     {
         "slug": "commercial-construction",
-        "num": "08",
+        "num": "07",
         "title": "Commercial & TI",
-        "tag": "Tenant improvements, ground-up, retail",
-        "blurb": "Commercial ground-up construction, tenant improvements, restaurant buildouts and retail finish-outs along the Wasatch Front.",
+        "tag": "Tenant improvements, buildouts, retail",
+        "blurb": "Commercial tenant improvements, restaurant and bar buildouts, retail finish-outs and office reconfigurations along the Wasatch Front.",
         "hero_img": "commercial-01",
         "imgs": ["commercial-01", "commercial-02", "commercial-03"],
-        "intro": "Commercial work demands a different operating tempo: tighter deadlines, lease-driven schedules, landlord coordination and inspector relationships. Multiworks runs a dedicated commercial division for tenant improvements (TI), ground-up commercial, restaurant and bar buildouts, retail finish-outs and small office/mixed-use projects.",
+        "intro": "Commercial work demands a different operating tempo: tighter deadlines, lease-driven schedules, landlord coordination and inspector relationships. Multiworks runs a dedicated commercial division for tenant improvements (TI), restaurant and bar buildouts, retail finish-outs and office and medical-suite reconfigurations.",
         "what_we_do": [
             "Tenant improvements for office, medical, dental and professional space",
             "Restaurant and bar buildouts: kitchen, hood, grease, finish",
             "Retail storefront finish-outs and fit-outs",
-            "Small ground-up commercial: mixed-use, flex, light industrial",
+            "Office and medical-suite reconfigurations",
             "ADA compliance retrofits and accessibility upgrades",
             "Mechanical, electrical and plumbing rework for new use",
             "Landlord coordination, lease milestone management",
@@ -264,7 +235,7 @@ SERVICES = [
     },
     {
         "slug": "design-build",
-        "num": "09",
+        "num": "08",
         "title": "Design-Build Services",
         "tag": "One team, one contract",
         "blurb": "Architecture, interior design and construction under one roof — fewer handoffs, faster decisions, no finger-pointing.",
@@ -272,7 +243,7 @@ SERVICES = [
         "imgs": ["design-build-01", "design-build-02", "design-build-03"],
         "intro": "Design-build is the most efficient way to plan and execute a major construction project. Architecture, engineering, interior design and construction live on the same team and the same contract. Decisions get made faster, change orders shrink, and there's never a finger-point between architect and contractor when something needs solving.",
         "what_we_do": [
-            "Full architectural design (custom homes, remodels, ADUs, commercial)",
+            "Full architectural design (remodels, additions, ADUs, commercial)",
             "Interior design, material selections and FF&E specification",
             "Structural and MEP engineering coordination",
             "3D renderings, virtual walk-throughs, sample boards",
@@ -285,31 +256,6 @@ SERVICES = [
              "Design-bid-build splits the project across an architect and a contractor with two separate contracts. Design-build keeps them on one team with one contract — which usually means faster timelines, fewer change orders and aligned incentives."),
             ("Will design-build cost more?",
              "Almost always less, when you account for the full project. Construction-aware design avoids the expensive change orders that happen when an architect designs without contractor input."),
-        ],
-    },
-    {
-        "slug": "teardown-rebuild",
-        "num": "10",
-        "title": "Teardown & Rebuild",
-        "tag": "Right neighborhood, wrong house",
-        "blurb": "When the lot is worth more than the house — full teardown, new foundation, and a custom home that fits the neighborhood and your life.",
-        "hero_img": "teardown-01",
-        "imgs": ["teardown-01", "teardown-02", "teardown-03"],
-        "intro": "Sometimes the best home for a lot doesn't exist yet. Teardown-and-rebuild lets you keep the address, the schools, the mature trees, the neighborhood — and replace a dated or undersized home with one designed for how you actually live today. We handle demo, abatement, permits, foundation, and full custom build.",
-        "what_we_do": [
-            "Pre-purchase teardown feasibility and zoning analysis",
-            "Asbestos and hazardous material abatement",
-            "Selective demolition or full razing with site clearing",
-            "Survey, soils, geotech and engineering coordination",
-            "New foundation engineered for the lot's conditions",
-            "Full custom home build to your program and budget",
-            "Landscape, hardscape, driveway and final exterior",
-        ],
-        "faq": [
-            ("How much does it cost to tear down a house in Utah?",
-             "Typical residential demo runs $15K–$40K depending on size, abatement and disposal. Larger or older homes with hazardous materials cost more. We give you a fixed demo number up front."),
-            ("How long does the full teardown-rebuild process take?",
-             "From closing on the property to keys in hand, most teardown projects run 15–22 months — including design, permitting, demo and construction."),
         ],
     },
 ]
@@ -459,7 +405,7 @@ def footer_block():
           <span class="brand__mark">Multiworks</span>
           <span class="brand__sub">Construction · Utah</span>
         </div>
-        <p class="footer__about">A Utah design-build general contractor for custom homes, whole-home remodels, kitchens, baths, basements, additions and commercial buildouts. Licensed. Insured. Locally owned.</p>
+        <p class="footer__about">A Utah high-end remodeling contractor for whole-home remodels, kitchens, baths, basements, additions and commercial buildouts. Licensed. Insured. Locally owned.</p>
       </div>
       <div>
         <h4>Services</h4>
@@ -518,7 +464,7 @@ def page_home():
         ("How long is the wait to start a new project?",
          "Lead times vary by project size and trade availability. We typically schedule new project starts 6–12 weeks out and can sometimes start sooner. Call us for current availability."),
         ("What sets Multiworks apart from other Utah general contractors?",
-         "Single point of accountability, transparent fixed-fee pricing, in-house design and trades, written milestone schedules, and a 24-month workmanship warranty on every home we build."),
+         "Single point of accountability, transparent fixed-fee pricing, in-house design and trades, written milestone schedules, and a 24-month workmanship warranty on every project."),
     ]
     faq_html = "\n".join(
         f"""<div class="faq__item"><button class="faq__q" type="button">{esc(q)} <span class="plus">+</span></button><div class="faq__a"><p>{esc(a)}</p></div></div>"""
@@ -533,7 +479,7 @@ def page_home():
         ],
     }
     return common_head(
-        title=f"Multiworks Construction LLC | Utah Custom Home Builder & Remodeler — {ADDRESS_LOCALITY}",
+        title=f"Multiworks Construction LLC | Utah High-End Remodeler & Design-Build Contractor — {ADDRESS_LOCALITY}",
         description=SITE_DESC_SHORT,
         canonical_path="/",
         og_image_name="hero-01",
@@ -543,8 +489,8 @@ def page_home():
   <div class="hero__bg">{slides_html}</div>
   <div class="hero__inner">
     <span class="eyebrow hero__eyebrow">Salt Lake City · Park City · Wasatch Front</span>
-    <h1 class="hero__title">Utah custom homes &amp; remodels, built <em>without compromise</em>.</h1>
-    <p class="hero__sub">Multiworks Construction is a design-build general contractor for clients who refuse to settle. From ground-up custom homes to floor-to-ceiling remodels, we build with one schedule, one team, and one standard: on time, on budget, no excuses.</p>
+    <h1 class="hero__title">Utah high-end <em>remodels</em>, built without compromise.</h1>
+    <p class="hero__sub">Multiworks Construction is a high-end Utah remodeling contractor for clients who refuse to settle. From kitchens and bathrooms to whole-home transformations, additions and commercial buildouts, we work with one schedule, one team, and one standard: on time, on budget, no excuses.</p>
     <div class="hero__cta">
       <a class="btn btn--solid" href="/contact.html">Start a project <span class="arrow">→</span></a>
       <a class="btn btn--ghost-light" href="/services.html">Our services</a>
@@ -557,11 +503,11 @@ def page_home():
   <div class="wrap split reveal">
     <div>
       <span class="eyebrow">Multiworks Construction</span>
-      <h2 style="margin-top:1rem">A Utah general contractor for homes built to <em>outlast trends</em>.</h2>
+      <h2 style="margin-top:1rem">A Utah remodeler for homes built to <em>outlast trends</em>.</h2>
     </div>
     <div>
-      <p class="lead">We build and remodel homes along the Wasatch Front for clients who'd rather wait six months to do it right than three to do it twice. Every project gets a dedicated project manager, a written milestone schedule, transparent fixed-fee pricing, and a 24-month workmanship warranty.</p>
-      <p>From ground-up custom homes in Holladay and Park City to floor-to-ceiling remodels in Sugar House and basement build-outs in Sandy, we run every job the way we'd want our own homes run.</p>
+      <p class="lead">We remodel high-end homes along the Wasatch Front for clients who'd rather wait six months to do it right than three to do it twice. Every project gets a dedicated project manager, a written milestone schedule, transparent fixed-fee pricing, and a 24-month workmanship warranty.</p>
+      <p>From kitchen reworks in Holladay and Park City to floor-to-ceiling whole-home remodels in Sugar House and basement build-outs in Sandy, we run every job the way we'd want our own homes run.</p>
       <a class="btn btn--ghost" href="/about.html">About Multiworks <span class="arrow">→</span></a>
     </div>
   </div>
@@ -608,8 +554,8 @@ def page_home():
   <div class="wrap reveal">
     <div class="testimonial">
       <span class="eyebrow eyebrow--mute" style="display:block;margin-bottom:1.5rem">A recent client</span>
-      <p class="testimonial__quote">"Multiworks didn't just build our home — they protected our investment, our schedule and our sanity. Every milestone hit on time. Every change order arrived in writing before work started. It's the way construction is supposed to work."</p>
-      <div class="testimonial__attr">Holladay, Utah · Custom Home Client</div>
+      <p class="testimonial__quote">"Multiworks didn't just remodel our home — they protected our investment, our schedule and our sanity. Every milestone hit on time. Every change order arrived in writing before work started. It's the way construction is supposed to work."</p>
+      <div class="testimonial__attr">Holladay, Utah · Whole-Home Remodel Client</div>
     </div>
   </div>
 </section>
@@ -784,7 +730,7 @@ def page_services():
     <div class="crumbs"><a href="/">Home</a> · Services</div>
     <span class="eyebrow" style="color:var(--accent)">Our services</span>
     <h1 class="page-hero__title" style="margin-top:1rem">Ten services. <em>One Utah team.</em></h1>
-    <p class="page-hero__sub">From ground-up custom homes to commercial tenant improvements — every service Multiworks delivers is held to the same standard: written schedule, fixed-fee pricing, dedicated project manager, 24-month warranty.</p>
+    <p class="page-hero__sub">From kitchen reworks to whole-home transformations and commercial tenant improvements — every service Multiworks delivers is held to the same standard: written schedule, fixed-fee pricing, dedicated project manager, 24-month warranty.</p>
   </div>
 </section>
 
@@ -815,8 +761,8 @@ def page_services():
 
 def page_about():
     return common_head(
-        title="About Multiworks Construction | Utah Custom Home Builder & Remodeler",
-        description="Multiworks Construction LLC is a Utah-owned design-build general contractor serving Salt Lake City, Park City and the Wasatch Front. Licensed, insured, locally rooted.",
+        title="About Multiworks Construction | Utah High-End Remodeler & Design-Build Contractor",
+        description="Multiworks Construction LLC is a Utah-owned high-end remodeler serving Salt Lake City, Park City and the Wasatch Front. Licensed, insured, locally rooted.",
         canonical_path="/about.html",
         og_image_name="hero-05",
     ) + nav_block(current="about") + f"""
@@ -826,7 +772,7 @@ def page_about():
     <div class="crumbs"><a href="/">Home</a> · About</div>
     <span class="eyebrow" style="color:var(--accent)">About Multiworks</span>
     <h1 class="page-hero__title" style="margin-top:1rem">Utah-built. <em>Client-aligned.</em> No drama.</h1>
-    <p class="page-hero__sub">Multiworks Construction LLC is a Utah-owned design-build general contractor. We build custom homes, remodel existing ones, and finish out commercial spaces along the Wasatch Front — for clients who'd rather hire one team than coordinate five.</p>
+    <p class="page-hero__sub">Multiworks Construction LLC is a Utah-owned high-end remodeling contractor. We remodel existing homes, build thoughtful additions, and finish out commercial spaces along the Wasatch Front — for clients who'd rather hire one team than coordinate five.</p>
   </div>
 </section>
 
@@ -869,8 +815,8 @@ def page_about():
   <div class="wrap reveal">
     <div class="testimonial">
       <span class="eyebrow" style="display:block;margin-bottom:1.5rem">A recent client</span>
-      <p class="testimonial__quote" style="color:var(--bone)">"You don't realize how rare honest construction is until you've experienced it. Multiworks ran our build like a Swiss watch — and made it look easy."</p>
-      <div class="testimonial__attr" style="color:var(--mute-2)">Park City · Custom Home Client</div>
+      <p class="testimonial__quote" style="color:var(--bone)">"You don't realize how rare honest construction is until you've experienced it. Multiworks ran our remodel like a Swiss watch — and made it look easy."</p>
+      <div class="testimonial__attr" style="color:var(--mute-2)">Park City · Remodel Client</div>
     </div>
   </div>
 </section>
@@ -893,8 +839,8 @@ def page_portfolio():
         for n, t in all_imgs
     )
     return common_head(
-        title="Portfolio | Utah Custom Homes, Remodels & Commercial — Multiworks Construction",
-        description="A selection of Multiworks Construction's recent Utah projects — custom homes, kitchens, baths, basements, additions, outdoor living and commercial buildouts in Salt Lake City and Park City.",
+        title="Portfolio | Utah Remodels, Additions & Commercial — Multiworks Construction",
+        description="A selection of Multiworks Construction's recent Utah projects — whole-home remodels, kitchens, baths, basements, additions, outdoor living and commercial buildouts in Salt Lake City and Park City.",
         canonical_path="/portfolio.html",
         og_image_name="hero-06",
     ) + nav_block(current="portfolio") + f"""
@@ -939,7 +885,7 @@ def page_portfolio():
 def page_contact():
     return common_head(
         title="Contact Multiworks Construction | Utah General Contractor — Call or Get a Quote",
-        description=f"Contact Multiworks Construction LLC for custom homes, remodels and commercial work in Utah. Call {PHONE} or request a no-pressure consultation. Serving Salt Lake City, Park City and the Wasatch Front.",
+        description=f"Contact Multiworks Construction LLC for high-end remodels, additions and commercial work in Utah. Call {PHONE} or request a no-pressure consultation. Serving Salt Lake City, Park City and the Wasatch Front.",
         canonical_path="/contact.html",
         og_image_name="hero-08",
     ) + nav_block(current="contact") + f"""
