@@ -49,7 +49,7 @@
   if (slides.length > 1 && !prefersReducedMotion) {
     var i = 0;
     var rotationInterval = null;
-    var ROTATION_MS = 6500;
+    var ROTATION_MS = 8000;
 
     function advance() {
       slides[i].classList.remove('is-active');
@@ -82,14 +82,9 @@
     start();
   }
 
-  // Apply data-bg to remaining elements (page-hero backgrounds — kept as background-image
-  // pattern; not converted to <img> in this pass because they're 1-per-page and the perf
-  // savings are negligible).
-  document.querySelectorAll('[data-bg]').forEach(function (el) {
-    if (el.tagName === 'IMG') return;
-    if (el.classList.contains('hero__slide')) return;
-    el.style.backgroundImage = "url('" + el.getAttribute('data-bg') + "')";
-  });
+  // (Legacy data-bg apply loop removed in the polish pass — all photographic content
+  //  is now <img> with native attributes. Kept only as a one-line guard for any
+  //  future ad-hoc data-bg uses that don't go through the <img> pipeline.)
 
   // Reveal-on-scroll. Honors prefers-reduced-motion by revealing immediately.
   if (prefersReducedMotion) {
@@ -106,6 +101,63 @@
     document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
   } else {
     document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-visible'); });
+  }
+
+  // Contact form: progressive AJAX submit so the user never leaves the page.
+  // Pages Function at /api/contact handles validation + email send + logging.
+  var contactForm = document.getElementById('contactForm');
+  if (contactForm) {
+    var statusEl = document.getElementById('formStatus');
+    var submitBtn = document.getElementById('contactSubmit');
+    var labelEl = submitBtn ? submitBtn.querySelector('.btn__label') : null;
+    var originalLabel = labelEl ? labelEl.textContent : 'Send message';
+
+    contactForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      if (statusEl) {
+        statusEl.textContent = '';
+        statusEl.className = 'form-status';
+      }
+      if (submitBtn) submitBtn.disabled = true;
+      if (labelEl) labelEl.textContent = 'Sending';
+
+      var fd = new FormData(contactForm);
+      fetch(contactForm.action, {
+        method: 'POST',
+        body: fd,
+        headers: { 'Accept': 'application/json' },
+      })
+        .then(function (r) {
+          return r.json().then(function (data) { return { ok: r.ok, data: data }; });
+        })
+        .then(function (res) {
+          if (res.ok && res.data && res.data.ok) {
+            if (statusEl) {
+              statusEl.textContent = 'Thanks. We received your request and will reach out within one business day.';
+              statusEl.className = 'form-status is-success';
+            }
+            contactForm.reset();
+            if (labelEl) labelEl.textContent = 'Sent';
+          } else {
+            if (statusEl) {
+              statusEl.textContent = (res.data && res.data.error)
+                ? res.data.error
+                : 'Something went wrong. Please call us at ' + (document.querySelector('.contact-card__value a[href^="tel:"]') || {}).textContent + ' or try again.';
+              statusEl.className = 'form-status is-error';
+            }
+            if (submitBtn) submitBtn.disabled = false;
+            if (labelEl) labelEl.textContent = originalLabel;
+          }
+        })
+        .catch(function () {
+          if (statusEl) {
+            statusEl.textContent = "Couldn't reach the server. Please call us or try again.";
+            statusEl.className = 'form-status is-error';
+          }
+          if (submitBtn) submitBtn.disabled = false;
+          if (labelEl) labelEl.textContent = originalLabel;
+        });
+    });
   }
 
   // FAQ accordion with proper ARIA (was: class toggle only — VoiceOver/JAWS silent).

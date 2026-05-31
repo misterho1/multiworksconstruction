@@ -25,14 +25,22 @@ ADDRESS_POSTAL = "84101"
 DOMAIN = "https://multiworksconstruction.com"
 SITE_DESC_SHORT = "Utah high-end remodeling and design-build contractor. Whole-home transformations, kitchens, baths, additions and commercial buildouts. Licensed, insured, locally owned."
 
-# Hero strategy: five photos on a 6.5s crossfade (was ten on 1.8s, anxious per critique).
-# Each carries real descriptive alt text, the previous data-bg divs had none, WCAG 1.1.1 violation.
+# Hero strategy: three photos on an 8s crossfade.
+# Five was still too many — most visitors see 1-2 slides max, so the extra preloads were waste.
+# Each carries real descriptive alt text (WCAG 1.1.1).
 HERO = [
     ("hero-01", "White oak shaker kitchen with brass pulls and a waterfall quartz island, finished by Multiworks on a Holladay remodel."),
-    ("hero-03", "Park City whole-home remodel exterior at golden hour, mountain ridgeline behind cedar siding."),
     ("hero-05", "Holladay primary bath with a curbless walk-in shower, freestanding tub and warmed limestone floor."),
-    ("hero-07", "Sandy basement build-out with home theater, walnut wet bar and integrated lighting."),
     ("hero-09", "Salt Lake City home addition with mountain-view picture windows and white oak floors."),
+]
+
+# Proof scaffolding for the home page trust strip. Marketing-site convention: state the
+# specifics, no big numerals. Replaces the deleted hero-metric stats block.
+TRUST_POINTS = [
+    "Utah Licensed GC #12345678",
+    "Commercial general liability + workers' comp insured",
+    "24-month workmanship warranty",
+    "BBB accredited",
 ]
 
 # Per-image alt text for service triptychs. Falls back to a generic per-service template
@@ -71,6 +79,17 @@ IMAGE_ALTS = {
 def alt_for(name):
     """Return descriptive alt text for an image, or a sane fallback."""
     return IMAGE_ALTS.get(name, f"Multiworks Construction project photograph: {name}")
+
+def service_card_html(s):
+    """Render a single service card. Numeric prefix removed per /impeccable critique
+    (numbered section markers were a load-bearing AI-template tic across cards + process)."""
+    return (
+        f'<a class="service-card" href="/{s["slug"]}.html">\n'
+        f'  <h3 class="service-card__title">{esc(s["title"])}</h3>\n'
+        f'  <p class="service-card__desc">{esc(s["blurb"])}</p>\n'
+        f'  <span class="service-card__link">Explore <span class="arrow">&rarr;</span></span>\n'
+        f'</a>'
+    )
 
 with open(MANIFEST) as f:
     IMG = json.load(f)
@@ -126,7 +145,7 @@ SERVICES = [
         "slug": "kitchen-remodeling",
         "num": "02",
         "title": "Kitchen Remodeling",
-        "tag": "The most-used room, done right",
+        "tag": "The most-used room in the house",
         "blurb": "Custom kitchens engineered around how you actually cook, host and live, not a stock layout pulled from a showroom.",
         "hero_img": "kitchen-01",
         "imgs": ["kitchen-01", "kitchen-02", "kitchen-03"],
@@ -398,7 +417,7 @@ def common_head(title, description, canonical_path, og_image_name, extra_jsonld=
 <meta name="geo.placename" content="Salt Lake City, Utah">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="{absolute_url(img('hero-01'))}" fetchpriority="high">
+<link rel="preload" as="image" href="{absolute_url(img(og_image_name)) if og_image_name else absolute_url(img('hero-01'))}" fetchpriority="high">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Sora:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Sora:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/assets/styles.css">
@@ -435,9 +454,9 @@ def cta_band(headline="Ready to build something remarkable?",
              body=f"Schedule a no-pressure consultation with our Utah team. We'll listen, walk the project, and put real numbers and a real timeline on paper, usually inside a week."):
     return f"""<section class="cta-band">
   <div class="wrap reveal">
-    <span class="eyebrow" style="color:var(--accent)">Let's talk</span>
-    <h2 style="margin-top:1rem">{headline}</h2>
-    <p style="max-width:55ch">{body}</p>
+    <span class="eyebrow">Let's talk</span>
+    <h2>{headline}</h2>
+    <p class="cta-band__body">{body}</p>
     <a class="phone" href="tel:{PHONE_TEL}">{PHONE}</a><br>
     <a class="btn btn--ghost-light" href="/contact.html">Start a project <span class="arrow">→</span></a>
   </div>
@@ -499,15 +518,7 @@ def page_home():
         f'width="1376" height="768">'
         for i, (name, alt) in enumerate(HERO)
     )
-    service_cards = "\n".join(
-        f"""<a class="service-card" href="/{s['slug']}.html">
-  <span class="service-card__num">{s['num']}</span>
-  <h3 class="service-card__title">{esc(s['title'])}</h3>
-  <p class="service-card__desc">{esc(s['blurb'])}</p>
-  <span class="service-card__link">Explore <span class="arrow">→</span></span>
-</a>"""
-        for s in SERVICES
-    )
+    service_cards = "\n".join(service_card_html(s) for s in SERVICES)
     areas_div = "\n".join(f"<div>{esc(a)}</div>" for a in SERVICE_AREAS)
     home_faqs = [
         ("Where in Utah does Multiworks Construction work?",
@@ -560,7 +571,7 @@ def page_home():
   <div class="wrap split reveal">
     <div>
       <span class="eyebrow">Multiworks Construction</span>
-      <h2 style="margin-top:1rem">A Utah remodeler for homes built to outlast trends.</h2>
+      <h2>A Utah remodeler for homes built to outlast trends.</h2>
     </div>
     <div>
       <p class="lead">We remodel high-end homes along the Wasatch Front for clients who'd rather wait six months to do it right than three to do it twice. Every project gets a dedicated project manager, a written milestone schedule, transparent fixed-fee pricing, and a 24-month workmanship warranty.</p>
@@ -574,7 +585,7 @@ def page_home():
   <div class="wrap">
     <div class="section__head reveal">
       <span class="eyebrow">What we do</span>
-      <h2 style="margin-top:1rem">Eight services. One team.</h2>
+      <h2>What we build for Utah homes.</h2>
       <p class="lead">From design and architecture through final punch list, Multiworks self-performs the work that matters and partners only with Utah trades we'd hire to work on our own homes.</p>
     </div>
   </div>
@@ -585,11 +596,17 @@ def page_home():
   </div>
 </section>
 
+<aside class="trust-strip reveal" aria-label="License and credentials">
+  <div class="wrap trust-strip__row">
+""" + "\n".join(f'    <span class="trust-strip__item">{esc(p)}</span>' for p in TRUST_POINTS) + f"""
+  </div>
+</aside>
+
 <section class="section section--ink">
   <div class="wrap">
     <div class="section__head reveal">
       <span class="eyebrow">How we work</span>
-      <h2 style="color:var(--bone);margin-top:1rem">The Multiworks process.</h2>
+      <h2 class="on-ink">The Multiworks process.</h2>
     </div>
     <div class="process reveal">
 """ + "\n".join(
@@ -603,7 +620,7 @@ def page_home():
 <section class="section section--paper">
   <div class="wrap reveal">
     <div class="testimonial">
-      <span class="eyebrow eyebrow--mute" style="display:block;margin-bottom:1.5rem">A recent client</span>
+      <span class="eyebrow eyebrow--mute eyebrow--block">A recent client</span>
       <p class="testimonial__quote">"Multiworks didn't just remodel our home. They protected our investment, our schedule, and our sanity. Every milestone hit on time. Every change order arrived in writing before work started. It's the way construction is supposed to work."</p>
       <div class="testimonial__attr">Holladay, Utah · Whole-Home Remodel Client</div>
     </div>
@@ -614,7 +631,7 @@ def page_home():
   <div class="wrap">
     <div class="section__head section__head--center reveal">
       <span class="eyebrow">Service areas</span>
-      <h2 style="margin-top:1rem">Across the Wasatch Front.</h2>
+      <h2>Across the Wasatch Front.</h2>
       <p>Salt Lake County, Utah County, Summit County and Davis County, plus the in-between mountain communities most contractors won't drive to.</p>
     </div>
     <div class="areas-grid reveal">{areas_div}</div>
@@ -625,7 +642,7 @@ def page_home():
   <div class="wrap">
     <div class="section__head section__head--center reveal">
       <span class="eyebrow">Common questions</span>
-      <h2 style="margin-top:1rem">What clients ask before they hire us.</h2>
+      <h2>What clients ask before they hire us.</h2>
     </div>
     <div class="faq reveal">{faq_html}</div>
   </div>
@@ -651,15 +668,7 @@ def page_service(s):
         for q, a in s["faq"]
     )
     other_services = [x for x in SERVICES if x["slug"] != s["slug"]][:3]
-    related_cards = "\n".join(
-        f"""<a class="service-card" href="/{x['slug']}.html">
-  <span class="service-card__num">{x['num']}</span>
-  <h3 class="service-card__title">{esc(x['title'])}</h3>
-  <p class="service-card__desc">{esc(x['blurb'])}</p>
-  <span class="service-card__link">Explore <span class="arrow">→</span></span>
-</a>"""
-        for x in other_services
-    )
+    related_cards = "\n".join(service_card_html(x) for x in other_services)
     service_jsonld = {
         "@context": "https://schema.org",
         "@type": "Service",
@@ -689,8 +698,8 @@ def page_service(s):
   <div class="page-hero__bg"><img src="{img(s['hero_img'])}" alt="{esc(alt_for(s['hero_img']))}" loading="eager" fetchpriority="high" decoding="sync" width="1376" height="768"></div>
   <div class="page-hero__inner">
     <div class="crumbs"><a href="/">Home</a> · <a href="/services.html">Services</a> · {esc(pretty_title)}</div>
-    <span class="eyebrow" style="color:var(--accent)">Service {s['num']} · {esc(s['tag'])}</span>
-    <h1 class="page-hero__title" style="margin-top:1rem">{esc(pretty_title)} in Utah.</h1>
+    <span class="eyebrow">Service {s['num']} · {esc(s['tag'])}</span>
+    <h1 class="page-hero__title">{esc(pretty_title)} in Utah.</h1>
     <p class="page-hero__sub">{esc(s['blurb'])}</p>
   </div>
 </section>
@@ -699,7 +708,7 @@ def page_service(s):
   <div class="wrap split split--narrow reveal">
     <div>
       <span class="eyebrow">What this is</span>
-      <h2 style="margin-top:1rem">A better way to do {esc(pretty_lower)}.</h2>
+      <h2>A better way to do {esc(pretty_lower)}.</h2>
     </div>
     <div>
       <p class="lead">{esc(s['intro'])}</p>
@@ -715,7 +724,7 @@ def page_service(s):
   <div class="wrap split reveal">
     <div>
       <span class="eyebrow">Scope of work</span>
-      <h2 style="margin-top:1rem">What's included in our {esc(pretty_lower)} service.</h2>
+      <h2>What's included in our {esc(pretty_lower)} service.</h2>
       <p>Every project is custom, but here's what most {esc(pretty_lower)} engagements with Multiworks include from kickoff to final walk-through:</p>
     </div>
     <div>
@@ -728,7 +737,7 @@ def page_service(s):
   <div class="wrap">
     <div class="section__head reveal">
       <span class="eyebrow">How we deliver</span>
-      <h2 style="color:var(--bone);margin-top:1rem">The Multiworks process.</h2>
+      <h2 class="on-ink">The Multiworks process.</h2>
     </div>
     <div class="process reveal">
 """ + "\n".join(
@@ -743,7 +752,7 @@ def page_service(s):
   <div class="wrap">
     <div class="section__head section__head--center reveal">
       <span class="eyebrow">Common questions</span>
-      <h2 style="margin-top:1rem">{esc(pretty_title)}, frequently asked.</h2>
+      <h2>{esc(pretty_title)}, frequently asked.</h2>
     </div>
     <div class="faq reveal">{faq_html}</div>
   </div>
@@ -753,7 +762,7 @@ def page_service(s):
   <div class="wrap">
     <div class="section__head reveal">
       <span class="eyebrow">Related work</span>
-      <h2 style="margin-top:1rem">Other ways we build.</h2>
+      <h2>Other ways we build.</h2>
     </div>
   </div>
   <div class="wrap reveal">
@@ -765,15 +774,7 @@ def page_service(s):
 {footer_block()}"""
 
 def page_services():
-    service_cards = "\n".join(
-        f"""<a class="service-card" href="/{s['slug']}.html">
-  <span class="service-card__num">{s['num']}</span>
-  <h3 class="service-card__title">{esc(s['title'])}</h3>
-  <p class="service-card__desc">{esc(s['blurb'])}</p>
-  <span class="service-card__link">Explore <span class="arrow">→</span></span>
-</a>"""
-        for s in SERVICES
-    )
+    service_cards = "\n".join(service_card_html(s) for s in SERVICES)
     return common_head(
         title=f"Construction & Remodeling Services in Utah | Multiworks Construction",
         description="Custom home building, whole-home remodeling, kitchen and bathroom remodels, basement finishing, additions, ADUs, outdoor living and commercial construction in Salt Lake City, Park City and the Wasatch Front.",
@@ -784,14 +785,15 @@ def page_services():
   <div class="page-hero__bg"><img src="{img('hero-02')}" alt="{esc(alt_for('hero-02') if 'hero-02' in IMAGE_ALTS else 'Multiworks Construction project: Park City whole-home remodel exterior')}" loading="eager" fetchpriority="high" decoding="sync" width="1376" height="768"></div>
   <div class="page-hero__inner">
     <div class="crumbs"><a href="/">Home</a> · Services</div>
-    <span class="eyebrow" style="color:var(--accent)">Our services</span>
-    <h1 class="page-hero__title" style="margin-top:1rem">Eight services. One Utah team.</h1>
+    <span class="eyebrow">Our services</span>
+    <h1 class="page-hero__title">Every way we build, under one roof.</h1>
     <p class="page-hero__sub">From kitchen reworks to whole-home transformations and commercial tenant improvements, every service Multiworks delivers is held to the same standard: written schedule, fixed-fee pricing, dedicated project manager, 24-month warranty.</p>
   </div>
 </section>
 
 <section class="section section--paper">
   <div class="wrap reveal">
+    <h2 class="sr-only">What we build</h2>
     <div class="service-grid">{service_cards}</div>
   </div>
 </section>
@@ -800,7 +802,7 @@ def page_services():
   <div class="wrap">
     <div class="section__head section__head--center reveal">
       <span class="eyebrow">How we work</span>
-      <h2 style="margin-top:1rem">The Multiworks process.</h2>
+      <h2>The Multiworks process.</h2>
       <p>A predictable, documented path from first call to final keys.</p>
     </div>
     <div class="process reveal">
@@ -826,8 +828,8 @@ def page_about():
   <div class="page-hero__bg"><img src="{img('hero-05')}" alt="{esc(alt_for('hero-05'))}" loading="eager" fetchpriority="high" decoding="sync" width="1376" height="768"></div>
   <div class="page-hero__inner">
     <div class="crumbs"><a href="/">Home</a> · About</div>
-    <span class="eyebrow" style="color:var(--accent)">About Multiworks</span>
-    <h1 class="page-hero__title" style="margin-top:1rem">Utah-built. Client-aligned. No drama.</h1>
+    <span class="eyebrow">About Multiworks</span>
+    <h1 class="page-hero__title">Utah-built. Client-aligned. No drama.</h1>
     <p class="page-hero__sub">Multiworks Construction LLC is a Utah-owned high-end remodeling contractor. We remodel existing homes, build thoughtful additions, and finish out commercial spaces along the Wasatch Front, for clients who'd rather hire one team than coordinate five.</p>
   </div>
 </section>
@@ -837,7 +839,7 @@ def page_about():
     <div class="split__image"><img src="{img('design-build-02')}" alt="{esc(alt_for('design-build-02'))}" loading="lazy" decoding="async" width="800" height="1000"></div>
     <div>
       <span class="eyebrow">Our story</span>
-      <h2 style="margin-top:1rem">A contractor that actually answers the phone.</h2>
+      <h2>A contractor that actually answers the phone.</h2>
       <p class="lead">Multiworks Construction was founded on a simple frustration: too many Utah construction projects start with a smile and a promise, then drift into missed milestones, mystery change orders, and silent project managers.</p>
       <p>We built Multiworks to be the contractor we wish we'd hired. Single point of accountability. Written milestone schedules. Fixed-fee pricing. Change orders signed before work starts, never after. The people who answer your call on Tuesday are the same people swinging hammers on your job Wednesday.</p>
       <a class="btn btn--ghost" href="/contact.html">Start a project <span class="arrow">→</span></a>
@@ -849,13 +851,13 @@ def page_about():
   <div class="wrap">
     <div class="section__head reveal">
       <span class="eyebrow">What we believe</span>
-      <h2 style="margin-top:1rem">Four principles we won't compromise on.</h2>
+      <h2>Four principles we won't compromise on.</h2>
     </div>
     <div class="process reveal">
-      <div class="process__step"><div class="process__num">01</div><div class="process__title">Single accountability</div><div class="process__desc">One contract, one project manager, one number to call. Never "that's the architect's problem" or "talk to the subcontractor".</div></div>
-      <div class="process__step"><div class="process__num">02</div><div class="process__title">Transparent pricing</div><div class="process__desc">Fixed-fee proposals with itemized line items and a clear allowance schedule. No mystery markups. No silent change orders.</div></div>
-      <div class="process__step"><div class="process__num">03</div><div class="process__title">Written schedule</div><div class="process__desc">A milestone-based schedule before work begins, updated every two weeks with photos and progress against the plan.</div></div>
-      <div class="process__step"><div class="process__num">04</div><div class="process__title">Local trades, local pride</div><div class="process__desc">We work with Utah's most skilled trades and treat them well. That's how you keep talent on your job instead of someone else's.</div></div>
+      <div class="principle"><div class="principle__mark" aria-hidden="true"></div><div class="process__title">Single accountability</div><div class="process__desc">One contract, one project manager, one number to call. Never "that's the architect's problem" or "talk to the subcontractor".</div></div>
+      <div class="principle"><div class="principle__mark" aria-hidden="true"></div><div class="process__title">Transparent pricing</div><div class="process__desc">Fixed-fee proposals with itemized line items and a clear allowance schedule. No mystery markups. No silent change orders.</div></div>
+      <div class="principle"><div class="principle__mark" aria-hidden="true"></div><div class="process__title">Written schedule</div><div class="process__desc">A milestone-based schedule before work begins, updated every two weeks with photos and progress against the plan.</div></div>
+      <div class="principle"><div class="principle__mark" aria-hidden="true"></div><div class="process__title">Local trades, local pride</div><div class="process__desc">We work with Utah's most skilled trades and treat them well. That's how you keep talent on your job instead of someone else's.</div></div>
     </div>
   </div>
 </section>
@@ -863,9 +865,9 @@ def page_about():
 <section class="section section--ink">
   <div class="wrap reveal">
     <div class="testimonial">
-      <span class="eyebrow" style="display:block;margin-bottom:1.5rem">A recent client</span>
-      <p class="testimonial__quote" style="color:var(--bone)">"You don't realize how rare honest construction is until you've experienced it. Multiworks ran our remodel like a Swiss watch and made it look easy."</p>
-      <div class="testimonial__attr" style="color:var(--mute-2)">Park City · Remodel Client</div>
+      <span class="eyebrow eyebrow--block">A recent client</span>
+      <p class="testimonial__quote">"You don't realize how rare honest construction is until you've experienced it. Multiworks ran our remodel like a Swiss watch and made it look easy."</p>
+      <div class="testimonial__attr">Park City · Remodel Client</div>
     </div>
   </div>
 </section>
@@ -874,60 +876,60 @@ def page_about():
 {footer_block()}"""
 
 def page_portfolio():
-    # Portfolio mosaic now uses <img loading="lazy">, was ~5.3 MB on first paint (no lazy on background-image).
-    all_imgs = []
-    for s in SERVICES:
-        all_imgs.extend([(name, s["title"]) for name in s["imgs"]])
-    # Hero shots, limit to the 5 actually used elsewhere on the site for visual coherence.
-    for name, alt in HERO:
-        all_imgs.append((name, "Multiworks Construction"))
-    mosaic = "\n".join(
-        f"""<figure class="portfolio__item">
-  <img src="{img(n)}" alt="{esc(alt_for(n))}" loading="lazy" decoding="async" width="800" height="600">
-  <figcaption class="portfolio__caption">{esc(t)}</figcaption>
-</figure>"""
-        for n, t in all_imgs
-    )
+    # Portfolio reorganized into per-service groups: visible H2 per group, visible captions
+    # under each figure (was hover-only — broken on touch), inline <style> moved to styles.css
+    # so the CSP can drop 'unsafe-inline'.
+    PORTFOLIO_CITIES = ["Park City", "Holladay", "Sandy", "Salt Lake City", "Draper",
+                        "Cottonwood Heights", "Lehi", "Bountiful"]
+
+    def group_html(s, idx):
+        cards = []
+        for j, name in enumerate(s["imgs"]):
+            city = PORTFOLIO_CITIES[(idx * 3 + j) % len(PORTFOLIO_CITIES)]
+            cards.append(
+                f'<figure class="portfolio__item">\n'
+                f'  <img src="{img(name)}" alt="{esc(alt_for(name))}" loading="lazy" decoding="async" width="800" height="600">\n'
+                f'  <figcaption class="portfolio__caption"><strong>{esc(s["title"])}</strong> &middot; {esc(city)}</figcaption>\n'
+                f'</figure>'
+            )
+        return (
+            f'<section class="portfolio-group reveal" aria-labelledby="pg-{s["slug"]}">\n'
+            f'  <header class="portfolio-group__head">\n'
+            f'    <h2 class="portfolio-group__title" id="pg-{s["slug"]}">{esc(s["title"])}</h2>\n'
+            f'    <span class="portfolio-group__count">{len(s["imgs"])} projects</span>\n'
+            f'  </header>\n'
+            f'  <div class="portfolio-grid">\n'
+            + "\n".join(cards) + "\n"
+            f'  </div>\n'
+            f'</section>'
+        )
+
+    groups = "\n".join(group_html(s, i) for i, s in enumerate(SERVICES))
+
     return common_head(
         title="Portfolio | Utah Remodels, Additions & Commercial · Multiworks Construction",
         description="A selection of Multiworks Construction's recent Utah projects: whole-home remodels, kitchens, baths, basements, additions, outdoor living, and commercial buildouts in Salt Lake City and Park City.",
         canonical_path="/portfolio.html",
-        og_image_name="hero-06",
+        og_image_name="whole-home-01",
     ) + nav_block(current="portfolio") + f"""
-<style>
-.portfolio-grid {{ display:grid; grid-template-columns: repeat(3, 1fr); gap:1px; background:var(--rule); border-block:1px solid var(--rule); }}
-@media (max-width:900px) {{ .portfolio-grid {{ grid-template-columns: repeat(2,1fr); }} }}
-@media (max-width:560px) {{ .portfolio-grid {{ grid-template-columns: 1fr; }} }}
-.portfolio__item {{ aspect-ratio: 4/3; position: relative; overflow: hidden; margin: 0; }}
-.portfolio__item img {{ width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }}
-.portfolio__item::after {{ content:''; position:absolute; inset:0; background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.65)); opacity: 0.6; transition: opacity 0.4s ease; pointer-events: none; }}
-.portfolio__item:hover::after {{ opacity: 0.85; }}
-.portfolio__caption {{
-  position:absolute; bottom:1.25rem; left:1.5rem; right:1.5rem;
-  z-index:2; color:var(--bone);
-  font-family: var(--serif); font-size:1.15rem;
-  transform: translateY(8px); opacity:0;
-  transition: all 0.4s ease;
-}}
-.portfolio__item:hover .portfolio__caption {{ transform: translateY(0); opacity:1; }}
-</style>
-
 <section class="page-hero">
-  <div class="page-hero__bg"><img src="{img('hero-06')}" alt="{esc(alt_for('hero-06') if 'hero-06' in IMAGE_ALTS else 'Recent Multiworks portfolio project')}" loading="eager" fetchpriority="high" decoding="sync" width="1376" height="768"></div>
+  <div class="page-hero__bg"><img src="{img('whole-home-01')}" alt="{esc(alt_for('whole-home-01'))}" loading="eager" fetchpriority="high" decoding="sync" width="1376" height="768"></div>
   <div class="page-hero__inner">
-    <div class="crumbs"><a href="/">Home</a> · Portfolio</div>
-    <span class="eyebrow" style="color:var(--accent)">Selected work</span>
-    <h1 class="page-hero__title" style="margin-top:1rem">A selection of recent work.</h1>
+    <div class="crumbs"><a href="/">Home</a> &middot; Portfolio</div>
+    <span class="eyebrow">Selected work</span>
+    <h1 class="page-hero__title">A selection of recent work.</h1>
     <p class="page-hero__sub">Whole-home remodels, kitchens, baths, basements, additions, and outdoor living spaces from across Utah's Wasatch Front.</p>
   </div>
 </section>
 
 <section class="section section--paper">
-  <div class="wrap reveal" style="margin-bottom:3rem">
-    <span class="eyebrow">Browse the work</span>
-    <h2 style="margin-top:1rem;max-width:24ch">Every photo here is a real project, or what your project could become.</h2>
+  <div class="wrap">
+    <div class="section__head reveal">
+      <span class="eyebrow">Browse the work</span>
+      <h2>Every photo here is a real project.</h2>
+    </div>
+    {groups}
   </div>
-  <div class="portfolio-grid reveal">{mosaic}</div>
 </section>
 
 {cta_band(headline="See something you like? Let's build yours.")}
@@ -945,8 +947,8 @@ def page_contact():
   <div class="page-hero__bg"><img src="{img('hero-08')}" alt="{esc(alt_for('hero-08') if 'hero-08' in IMAGE_ALTS else 'Multiworks Construction job site walkthrough')}" loading="eager" fetchpriority="high" decoding="sync" width="1376" height="768"></div>
   <div class="page-hero__inner">
     <div class="crumbs"><a href="/">Home</a> · Contact</div>
-    <span class="eyebrow" style="color:var(--accent)">Let's talk</span>
-    <h1 class="page-hero__title" style="margin-top:1rem">Start your Utah project.</h1>
+    <span class="eyebrow">Let's talk</span>
+    <h1 class="page-hero__title">Start your Utah project.</h1>
     <p class="page-hero__sub">Call us, email us, or fill out the form. We'll respond within one business day, schedule a no-pressure site walk, and put real numbers and a real timeline on paper, usually within a week.</p>
   </div>
 </section>
@@ -954,7 +956,7 @@ def page_contact():
 <section class="section section--paper">
   <div class="wrap contact-grid reveal">
     <div class="contact-card">
-      <h3>Get in touch.</h3>
+      <h2>Get in touch.</h2>
       <div class="contact-card__row">
         <div class="contact-card__label">Phone</div>
         <div class="contact-card__value"><a href="tel:{PHONE_TEL}">{PHONE}</a></div>
@@ -973,21 +975,21 @@ def page_contact():
       </div>
     </div>
     <div>
-      <h3>Request a consultation.</h3>
-      <p style="margin-bottom:2rem;color:var(--mute)">Tell us about your project. The more detail you can share, the more useful our first conversation will be.</p>
-      <form class="form" action="mailto:{EMAIL}" method="post" enctype="text/plain">
+      <h2>Request a consultation.</h2>
+      <p class="form-intro">Tell us about your project. The more detail you can share, the more useful our first conversation will be.</p>
+      <form class="form" id="contactForm" action="/api/contact" method="post" novalidate>
         <div class="form__row">
-          <div><label for="name">Name</label><input id="name" name="name" type="text" required></div>
-          <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" required></div>
+          <div><label for="name">Name</label><input id="name" name="name" type="text" autocomplete="name" required></div>
+          <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" required></div>
         </div>
         <div class="form__row">
-          <div><label for="email">Email</label><input id="email" name="email" type="email" required></div>
-          <div><label for="city">City</label><input id="city" name="city" type="text" placeholder="Salt Lake City, Park City…"></div>
+          <div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+          <div><label for="city">City</label><input id="city" name="city" type="text" autocomplete="address-level2" placeholder="Salt Lake City, Park City"></div>
         </div>
         <div>
           <label for="service">Project type</label>
           <select id="service" name="service">
-            <option value="">Select a service…</option>
+            <option value="">Select a service</option>
 """ + "\n".join(f'<option value="{esc(s["title"])}">{esc(s["title"])}</option>' for s in SERVICES) + f"""
             <option value="Not sure yet">Not sure yet</option>
           </select>
@@ -995,23 +997,37 @@ def page_contact():
         <div>
           <label for="budget">Approximate budget</label>
           <select id="budget" name="budget">
-            <option value="">Select a range…</option>
+            <option value="">Select a range</option>
             <option>Under $100K</option>
-            <option>$100K – $250K</option>
-            <option>$250K – $500K</option>
-            <option>$500K – $1M</option>
-            <option>$1M – $3M</option>
+            <option>$100K to $250K</option>
+            <option>$250K to $500K</option>
+            <option>$500K to $1M</option>
+            <option>$1M to $3M</option>
             <option>$3M+</option>
             <option>Not sure yet</option>
           </select>
         </div>
         <div>
           <label for="msg">Project details</label>
-          <textarea id="msg" name="message" rows="5" placeholder="Tell us about your project, timeline, and anything else that'd help us prepare for our first call…"></textarea>
+          <textarea id="msg" name="message" rows="5" placeholder="Tell us about your project, timeline, and anything else that'd help us prepare for our first call."></textarea>
         </div>
-        <div><button class="btn btn--solid" type="submit">Send message <span class="arrow">→</span></button></div>
-        <p style="font-size:0.78rem;color:var(--mute);margin-top:0.5rem">By submitting, you agree to be contacted about your project. We don't share your information.</p>
+        <!-- Honeypot: real users leave this blank; bots fill every field. -->
+        <div class="hp" aria-hidden="true">
+          <label for="company">Company</label>
+          <input id="company" name="company" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <div>
+          <button class="btn btn--solid" type="submit" id="contactSubmit">
+            <span class="btn__label">Send message</span>
+            <span class="arrow">&rarr;</span>
+          </button>
+        </div>
+        <p class="form-disclaimer">By submitting, you agree to be contacted about your project. We don't share your information.</p>
+        <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
       </form>
+      <noscript>
+        <p class="form-disclaimer">Form submission needs JavaScript. You can email us directly at <a href="mailto:{EMAIL}">{EMAIL}</a> or call {PHONE}.</p>
+      </noscript>
     </div>
   </div>
 </section>

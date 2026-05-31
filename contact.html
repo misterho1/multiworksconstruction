@@ -22,7 +22,7 @@
 <meta name="geo.placename" content="Salt Lake City, Utah">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="image" href="https://multiworksconstruction.com/assets/img/hero-01.webp" fetchpriority="high">
+<link rel="preload" as="image" href="https://multiworksconstruction.com/assets/img/hero-08.webp" fetchpriority="high">
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Sora:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Sora:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="/assets/styles.css">
@@ -51,8 +51,8 @@
   <div class="page-hero__bg"><img src="/assets/img/hero-08.webp" alt="Multiworks Construction job site walkthrough" loading="eager" fetchpriority="high" decoding="sync" width="1376" height="768"></div>
   <div class="page-hero__inner">
     <div class="crumbs"><a href="/">Home</a> · Contact</div>
-    <span class="eyebrow" style="color:var(--accent)">Let's talk</span>
-    <h1 class="page-hero__title" style="margin-top:1rem">Start your Utah project.</h1>
+    <span class="eyebrow">Let's talk</span>
+    <h1 class="page-hero__title">Start your Utah project.</h1>
     <p class="page-hero__sub">Call us, email us, or fill out the form. We'll respond within one business day, schedule a no-pressure site walk, and put real numbers and a real timeline on paper, usually within a week.</p>
   </div>
 </section>
@@ -60,7 +60,7 @@
 <section class="section section--paper">
   <div class="wrap contact-grid reveal">
     <div class="contact-card">
-      <h3>Get in touch.</h3>
+      <h2>Get in touch.</h2>
       <div class="contact-card__row">
         <div class="contact-card__label">Phone</div>
         <div class="contact-card__value"><a href="tel:+13852716688">+1 (385) 271-6688</a></div>
@@ -79,21 +79,21 @@
       </div>
     </div>
     <div>
-      <h3>Request a consultation.</h3>
-      <p style="margin-bottom:2rem;color:var(--mute)">Tell us about your project. The more detail you can share, the more useful our first conversation will be.</p>
-      <form class="form" action="mailto:build@multiworksconstruction.com" method="post" enctype="text/plain">
+      <h2>Request a consultation.</h2>
+      <p class="form-intro">Tell us about your project. The more detail you can share, the more useful our first conversation will be.</p>
+      <form class="form" id="contactForm" action="/api/contact" method="post" novalidate>
         <div class="form__row">
-          <div><label for="name">Name</label><input id="name" name="name" type="text" required></div>
-          <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" required></div>
+          <div><label for="name">Name</label><input id="name" name="name" type="text" autocomplete="name" required></div>
+          <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" autocomplete="tel" required></div>
         </div>
         <div class="form__row">
-          <div><label for="email">Email</label><input id="email" name="email" type="email" required></div>
-          <div><label for="city">City</label><input id="city" name="city" type="text" placeholder="Salt Lake City, Park City…"></div>
+          <div><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email" required></div>
+          <div><label for="city">City</label><input id="city" name="city" type="text" autocomplete="address-level2" placeholder="Salt Lake City, Park City"></div>
         </div>
         <div>
           <label for="service">Project type</label>
           <select id="service" name="service">
-            <option value="">Select a service…</option>
+            <option value="">Select a service</option>
 <option value="Whole-Home Remodeling">Whole-Home Remodeling</option>
 <option value="Kitchen Remodeling">Kitchen Remodeling</option>
 <option value="Bathroom Remodeling">Bathroom Remodeling</option>
@@ -108,23 +108,37 @@
         <div>
           <label for="budget">Approximate budget</label>
           <select id="budget" name="budget">
-            <option value="">Select a range…</option>
+            <option value="">Select a range</option>
             <option>Under $100K</option>
-            <option>$100K – $250K</option>
-            <option>$250K – $500K</option>
-            <option>$500K – $1M</option>
-            <option>$1M – $3M</option>
+            <option>$100K to $250K</option>
+            <option>$250K to $500K</option>
+            <option>$500K to $1M</option>
+            <option>$1M to $3M</option>
             <option>$3M+</option>
             <option>Not sure yet</option>
           </select>
         </div>
         <div>
           <label for="msg">Project details</label>
-          <textarea id="msg" name="message" rows="5" placeholder="Tell us about your project, timeline, and anything else that'd help us prepare for our first call…"></textarea>
+          <textarea id="msg" name="message" rows="5" placeholder="Tell us about your project, timeline, and anything else that'd help us prepare for our first call."></textarea>
         </div>
-        <div><button class="btn btn--solid" type="submit">Send message <span class="arrow">→</span></button></div>
-        <p style="font-size:0.78rem;color:var(--mute);margin-top:0.5rem">By submitting, you agree to be contacted about your project. We don't share your information.</p>
+        <!-- Honeypot: real users leave this blank; bots fill every field. -->
+        <div class="hp" aria-hidden="true">
+          <label for="company">Company</label>
+          <input id="company" name="company" type="text" tabindex="-1" autocomplete="off">
+        </div>
+        <div>
+          <button class="btn btn--solid" type="submit" id="contactSubmit">
+            <span class="btn__label">Send message</span>
+            <span class="arrow">&rarr;</span>
+          </button>
+        </div>
+        <p class="form-disclaimer">By submitting, you agree to be contacted about your project. We don't share your information.</p>
+        <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
       </form>
+      <noscript>
+        <p class="form-disclaimer">Form submission needs JavaScript. You can email us directly at <a href="mailto:build@multiworksconstruction.com">build@multiworksconstruction.com</a> or call +1 (385) 271-6688.</p>
+      </noscript>
     </div>
   </div>
 </section>
